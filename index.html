@@ -108,7 +108,7 @@ S.listas=Object.assign(JSON.parse(JSON.stringify(DEF.listas)),S.listas||{});
 const save=()=>{S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}queueCloud()};
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2600)}
 const EG=['Compra de mercadería','Transporte','Publicidad','Servicios','Alquiler','Otros'];
-const TABS=[['guia','📖 Guía'],['resumen','📊 Dashboard'],['productos','Productos'],['vender','📷 Vendido'],['ingresos','Ingresos'],['ganancia','💎 Ganancia real'],['descuentos','💸 Descuentos'],['egresos','Egresos'],['inversiones','Inversión'],['deudas','Deudas'],['etiquetas','🏷️ Etiquetas'],['respaldo','💾 Respaldo y PDF'],['catalogos','⚙️ Listas']];
+const TABS=[['guia','📖 Guía'],['resumen','📊 Dashboard'],['productos','Productos'],['vender','📷 Vendido'],['ingresos','Ingresos'],['ganancia','💎 Ganancia real'],['egresos','Egresos'],['inversiones','Inversión'],['deudas','Deudas'],['etiquetas','🏷️ Etiquetas'],['respaldo','💾 Respaldo y PDF'],['catalogos','⚙️ Listas']];
 let tab=S.productos.length?'resumen':'guia',selL='c|'+Object.keys(S.cats)[0]+'|0';
 const getL=ref=>{const p=ref.split('|');
  if(p[0]==='g'){const n={ing:'Ingresos › Concepto',egr:'Egresos › Concepto',inv:'Inversión › Concepto',deu:'Deudas › Detalle',per:'Deudas › Persona / entidad'}[p[1]];return{arr:S.listas[p[1]],name:n}}
@@ -345,7 +345,7 @@ guia(){
   ['Elige el período que quieres revisar.','Lee la frase del resumen y las tarjetas.','Mira los gráficos para entender de dónde viene tu dinero y en qué se va.','Revisa «Stock bajo» para saber qué productos debes reponer.'],'resumen','Ir al Dashboard'],
  ['🛍️','Productos','Para registrar y controlar lo que vendes',
   ['<b>Nuevo producto:</b> categoría, código (sale solo, ej. RO-001), producto y detalle (desplegables), «Lleva marca», costo, precio de venta, stock inicial y foto.','<b>Inventario:</b> tabla con foto, código, producto, categoría, detalle, costo, precio, margen y stock, con buscador y botones Editar y Eliminar.'],
-  ['Elige la <b>categoría</b>: el código aparece solo.','Elige el producto y su detalle en los desplegables.','Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.','Escribe el <b>costo</b>: en <b>Cómo poner el precio de venta</b> elige «Agregar 50% al costo» (se calcula solo) o «Ponerlo manualmente».','Indica el <b>stock</b> y, si quieres, toma una foto con 📷 o elígela de la galería.','Toca <b>Guardar producto</b>. Para encontrar uno, escribe en el buscador; toca su foto para verla más grande.'],'productos','Ir a Productos'],
+  ['Elige la <b>categoría</b>: el código aparece solo.','Elige el producto y su detalle en los desplegables.','Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.','Escribe el <b>costo</b>: elige en <b>Precio de venta</b> si quieres <b>+50%</b> sobre el costo, <b>otro porcentaje</b> (lo escribes y el precio real se calcula solo) o escribirlo a mano.','Indica el <b>stock</b> y, si quieres, toma una foto con 📷 o elígela de la galería.','Toca <b>Guardar producto</b>. Para encontrar uno, escribe en el buscador; toca su foto para verla más grande.'],'productos','Ir a Productos'],
  ['📷','Vendido','Para registrar lo vendido con la cámara o con un lector',
   ['<b>Cantidad por venta:</b> cuántas unidades se descuentan en cada escaneo.','<b>Descuento para la próxima venta:</b> en % o en Bs; se aplica al siguiente producto que escanees.','<b>Abrir cámara:</b> escanea el código de barras de la etiqueta (también funciona con un lector USB o Bluetooth).','<b>Escribir el código:</b> si no tienes cámara, escribe el código (ej. RO-001) y toca Vendido.','<b>Ventas de hoy:</b> lista de lo vendido hoy, con Editar y Eliminar.'],
   ['Imprime las etiquetas desde la pestaña Etiquetas.','Define la cantidad y, si hay, el descuento.','Toca <b>Abrir cámara</b> y apunta al código (o escríbelo).','La venta se guarda sola: baja el stock y se separa el <b>costo</b> de la <b>ganancia</b>.','Si te equivocas, usa <b>Editar</b> o <b>Eliminar</b> en «Ventas de hoy»: el stock se devuelve.'],'vender','Ir a Vendido'],
@@ -355,9 +355,9 @@ guia(){
  ['💎','Ganancia real','Para saber cuánto ganaste de verdad y cuánto puedes retirar',
   ['<b>Tarjetas:</b> Vendido (acumulado), Costo de lo vendido, Ganancia real acumulada, Ya retirado, Disponible, Ganancia real de este mes y Descuentos dados.','<b>Retirar ganancia:</b> fecha, tipo (Pago personal o Reinversión), monto y nota opcional.','<b>Retiros registrados:</b> todo lo que ya sacaste.','<b>Ganancia real por producto:</b> cuáles productos te dejan más ganancia.','Aquí no se restan gastos como transporte o publicidad: esos van en Egresos.'],
   ['Mira tu ganancia real acumulada y cuánto tienes <b>disponible</b>.','Cuando saques dinero, regístralo en <b>Retirar ganancia</b>.','Si retiras más de lo disponible, la app te avisa antes de guardar.','Revisa la tabla por producto para decidir qué conviene vender más.'],'ganancia','Ir a Ganancia real'],
- ['💸','Descuentos','Para ver cuánto has rebajado en tus ventas',
+ ['💸','Descuentos (dentro de Productos)','Para ver cuánto has rebajado en tus ventas; está al final de la pestaña Productos',
   ['<b>Tarjetas:</b> Descuento dado (acumulado), Descuento de este mes, Ventas con descuento y Descuento promedio.','<b>Ventas con descuento:</b> fecha, producto, precio de lista, descuento, %, cobrado y ganancia.','Esta pestaña solo muestra la información: los descuentos se registran en Vendido o en Ingresos.'],
-  ['Registra el descuento al vender (en Vendido o en Ingresos).','Entra aquí para ver cuánto has rebajado en total y en el mes.','Si el descuento promedio es alto, revisa tus precios.','Si algo está mal, usa <b>Editar</b> o <b>Eliminar</b> en la fila.'],'descuentos','Ir a Descuentos'],
+  ['Registra el descuento al vender (en Vendido o en Ingresos).','Entra a Productos y baja hasta «Descuentos que dimos» para ver cuánto has rebajado en total y en el mes.','Si el descuento promedio es alto, revisa tus precios.','Si algo está mal, usa <b>Editar</b> o <b>Eliminar</b> en la fila.'],'productos','Ir a Productos'],
  ['🧾','Egresos','Para anotar tus gastos',
   ['<b>Registrar egreso:</b> fecha, concepto (mercadería, transporte, publicidad, servicios, alquiler…) y monto.','<b>Tabla de egresos:</b> fecha, concepto y monto, con Editar y Eliminar. El total está arriba.'],
   ['Elige el <b>concepto</b>.','Escribe el <b>monto</b>.','Toca <b>Guardar</b>. Aquí va todo lo que sale de tu bolsillo.'],'egresos','Ir a Egresos'],
@@ -408,13 +408,15 @@ productos(){
  <label class='ck'><input type='checkbox' id='hb' name='hasb'> Lleva marca</label>
  <label id='bw' hidden>Marca<select name='marca'>${opts(B)}</select></label>
  <label>Costo (Bs)<input name="costo" type="number" step="0.01" min="0" required></label>
- <label>Cómo poner el precio de venta<select name="pmode"><option value="auto">Agregar 50% al costo (automático)</option><option value="manual">Ponerlo manualmente</option></select></label>
- <label>Precio venta (Bs)<input name="precio" type="number" step="0.01" min="0" required readonly placeholder="Se calcula con el costo"></label>
+ <label>Precio de venta: ¿qué porcentaje agregar?<select name="pmode"><option value="auto">+50% sobre el costo</option><option value="otro">Otro porcentaje</option><option value="manual">Escribir el precio a mano</option></select></label>
+ <label id="ppw" hidden>Porcentaje a agregar (%)<input name="ppct" type="number" step="0.01" min="0" placeholder="Ej: 80"></label>
+ <label>Precio de venta real (Bs)<input name="precio" type="number" step="0.01" min="0" required readonly placeholder="Se calcula con el costo"></label>
  <label>Stock inicial<input name="stock" type="number" min="0" value="0"></label>
  <label style="grid-column:1/-1">Descripción del producto (opcional)<textarea name="desc" rows="2" placeholder="Ej: material, talla, color, detalles, cuidados…"></textarea></label>
  <div class="frow"><small>Foto del producto (opcional)</small><label class="fl">📷 Tomar foto<input type="file" id="pfoto" accept="image/*" capture="environment" hidden></label><label class="fl g">🖼️ Galería<input type="file" id="pfoto2" accept="image/*" hidden></label><span id="pprev">${PF?`<img src="${PF}" alt="">`:''}</span></div>
  <button class="btn">Guardar producto</button></form></div>
- <div class="card"><h2>Inventario</h2><input id="q" placeholder="Buscar por código, nombre, marca…" style="margin-bottom:10px"><div id="plist">${prodTable('')}</div></div>`},
+ <div class="card"><h2>Inventario</h2><input id="q" placeholder="Buscar por código, nombre, marca…" style="margin-bottom:10px"><div id="plist">${prodTable('')}</div></div>
+ ${views.descuentos()}`},
 ingresos(){
  const l=byDate(S.ingresos),P=pmap();
  return `<div class="card"><h2>Registrar ingreso</h2><form data-f="ing" class="grid">
@@ -668,6 +670,7 @@ function fillAttr(){
 function render(){
  $('#nav').innerHTML=TABS.map(t=>`<button data-tab="${t[0]}" class="${t[0]===tab?'on':''}">${t[1]}</button>`).join('');
  if(tab==='vender'&&SC.on&&$('#vcam')){refreshV();return}
+ if(tab==='descuentos')tab='productos';
  if(tab!=='vender')camOff();
  if(tab!=='productos')PF=null;
  $('#app').innerHTML=views[tab]();
@@ -711,8 +714,10 @@ document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='q')$('#plist').innerHTML=prodTable(t.value);
  if(t.id==='ln')drawL();
  if(t.id==='idc'||t.id==='iq')ingCalc();
- if((t.name==='costo'||t.name==='pmode')&&t.form&&t.form.pmode){const f=t.form,p=f.precio,auto=f.pmode.value==='auto';p.readOnly=auto;p.placeholder=auto?'Se calcula con el costo':'Escribe el precio';
-  if(auto)p.value=f.costo.value!==''?(f.costo.value*1.5).toFixed(2):'';else if(t.name==='pmode')p.focus()}});
+ if(['costo','pmode','ppct'].includes(t.name)&&t.form&&t.form.pmode){const f=t.form,m=f.pmode.value,p=f.precio,c=parseFloat(f.costo.value),pc=m==='auto'?50:parseFloat(f.ppct.value);
+  f.querySelector('#ppw').hidden=m!=='otro';p.readOnly=m!=='manual';
+  if(m==='manual'){p.placeholder='Escribe el precio';if(t.name==='pmode')p.focus()}
+  else{p.placeholder=m==='otro'?'Escribe el porcentaje':'Se calcula con el costo';p.value=(!isNaN(c)&&!isNaN(pc))?(c*(1+pc/100)).toFixed(2):''}}});
 document.addEventListener('submit',async e=>{
  e.preventDefault();
  const f=Object.fromEntries(new FormData(e.target)),k=e.target.dataset.f;
