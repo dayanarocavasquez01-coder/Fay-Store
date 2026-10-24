@@ -422,10 +422,11 @@ ingresos(){
  return `<div class="card"><h2>Registrar ingreso</h2><form data-f="ing" class="grid">
  <label>Fecha<input name="fecha" type="date" value="${today()}" required></label>
  ${dd('concepto',S.listas.ing,'Concepto')}
- <label>Producto (opcional)<select id="ip" name="prod"><option value="">— ninguno —</option>${S.productos.map(p=>`<option value="${p.id}">${esc(p.cod)} · ${esc(p.nom)}${(p.det||p.marca)?' · '+esc([p.det,p.marca].filter(Boolean).join(' · ')):''}</option>`).join('')}</select></label>
+ <label>Categoría<select id="icat" name="cat"><option value="">— todas —</option>${opts(Object.keys(S.cats))}</select></label>
+ <label>Producto (opcional)<select id="ip" name="prod">${prodOpts('')}</select></label>
  <label>Cantidad<input id="iq" name="cant" type="number" min="1" value="1"></label><label>Descuento en<select id="idt" name="dt"><option value="%">% (porcentaje)</option><option value="bs">Bs (monto)</option></select></label><label>Descuento · opcional<input id="idc" name="desc" type="number" step="0.01" min="0" value="0"></label>${money('im','Precio final (Bs)')}<div id="ihint" class="edn" style="grid-column:1/-1"></div>
  <button class="btn">Guardar</button></form></div>
- <div class="card"><h2>Ingresos <span class="tot good">${fmt(sum(S.ingresos,'monto'))}</span></h2>${tbl(['Fecha','Concepto','Producto','Cant.','Monto','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P),g=(+i.monto||0)-c;return `<tr><td>${i.fecha}</td><td>${esc(i.concepto)}</td><td>${i.prod?esc(pname(i.prod)):'—'}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class="${g>=0?'good':'bad'}">${fmt(g)}</td>${del('ingresos',i.id)}</tr>`}))}</div>`},
+ <div class="card"><h2>Ingresos <span class="tot good">${fmt(sum(S.ingresos,'monto'))}</span></h2>${tbl(['Fecha','Concepto','Categoría','Producto','Cant.','Monto','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P),g=(+i.monto||0)-c;return `<tr><td>${i.fecha}</td><td>${esc(i.concepto)}</td><td>${esc(pcatOf(i)||'—')}</td><td>${i.prod?esc(pname(i.prod)):'—'}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class="${g>=0?'good':'bad'}">${fmt(g)}</td>${del('ingresos',i.id)}</tr>`}))}</div>`},
 egresos(){
  const l=byDate(S.egresos);
  return `<div class="card"><h2>Registrar egreso</h2><form data-f="egr" class="grid">
@@ -559,6 +560,8 @@ function onCode(raw){
  if(SC.busy)return;const t=String(raw||'').trim();if(!t)return;
  const n=Date.now();if(t===SC.last&&n-SC.lt<2500){SC.lt=n;return}
  SC.last=t;SC.lt=n;sellCode(t)}
+const pcatOf=i=>i.cat||((S.productos.find(x=>x.id===i.prod)||{}).cat)||'';
+const prodOpts=(cat,sel)=>'<option value="">— ninguno —</option>'+S.productos.filter(p=>!cat||p.cat===cat).map(p=>`<option value="${p.id}"${p.id===sel?' selected':''}>${esc(p.cod)} · ${esc(p.nom)}${(p.det||p.marca)?' · '+esc([p.det,p.marca].filter(Boolean).join(' · ')):''}</option>`).join('');
 async function sellCode(t){
  const p=S.productos.find(x=>x.cod.toLowerCase()===String(t).trim().toLowerCase());
  if(!p){beep(false);SC.fid=null;SC.msg='⚠️ Código no encontrado: '+t;refreshV();return}
@@ -568,7 +571,7 @@ async function sellP(p,q){
  if(p.stock<q){SC.busy=true;const ok=await ask('«'+p.nom+'» ('+p.cod+') figura con stock '+p.stock+'. ¿Registrar la venta igual?');SC.busy=false;if(!ok){SC.msg='Venta cancelada.';refreshV();return false}}
  SC.fid=p.id;p.stock=Math.max(0,p.stock-q);touch(p);
  const lista=+(p.precio*q).toFixed(2),vd=$('#vd'),dv=Math.max(0,+(vd&&vd.value)||0),dt=$('#vdt')?$('#vdt').value:'%',dsc=+(dt==='%'?lista*Math.min(dv,100)/100:Math.min(dv,lista)).toFixed(2);
- const r={id:uid(),fecha:today(),concepto:'Venta de productos',prod:p.id,cant:q,monto:+(lista-dsc).toFixed(2),lista,desc:dsc,costo:+(p.costo*q).toFixed(2),ts:Date.now()};
+ const r={id:uid(),fecha:today(),concepto:'Venta de productos',cat:p.cat,prod:p.id,cant:q,monto:+(lista-dsc).toFixed(2),lista,desc:dsc,costo:+(p.costo*q).toFixed(2),ts:Date.now()};
  S.ingresos.push(r);save();if(vd)vd.value=0;
  SC.msg='✔ '+p.cod+' · '+p.nom+' ×'+q+' — vendido '+fmt(r.monto)+(dsc>0?' (con descuento de '+fmt(dsc)+')':'')+' · ganancia '+fmt(r.monto-r.costo);
  beep(true);refreshV();return true}
@@ -709,6 +712,8 @@ document.addEventListener('change',e=>{
  if(e.target.id==='lc'||e.target.id==='lp')drawL();
  if(e.target.id==='sc'){selL=e.target.value;render()}
  if(e.target.dataset.dd)sync();
+ if(e.target.id==='icat'){const ip=$('#ip');if(ip){ip.innerHTML=prodOpts(e.target.value);ingCalc()}}
+ if(e.target.id==='ip'){const p=S.productos.find(x=>x.id===e.target.value),c=$('#icat');if(p&&c&&c.value!==p.cat){c.value=p.cat;e.target.innerHTML=prodOpts(p.cat,p.id)}}
  if(e.target.id==='ip'||e.target.id==='iq'||e.target.id==='idc'||e.target.id==='idt')ingCalc()});
 document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='q')$('#plist').innerHTML=prodTable(t.value);
@@ -731,7 +736,7 @@ document.addEventListener('submit',async e=>{
   if(cn===null)return toast('Escribe el concepto nuevo o elige uno.');
   if(p){if(p.stock<q)return toast('Stock insuficiente ('+p.stock+' disponibles).');p.stock-=q;touch(p)}
   const mo=+f.monto;let dsc=Math.max(0,+f.desc||0);if(f.dt==='%')dsc=p?+(p.precio*q*Math.min(dsc,100)/100).toFixed(2):0;if(p&&dsc===0&&mo<p.precio*q-.005)dsc=+(p.precio*q-mo).toFixed(2);
-  S.ingresos.push({id:uid(),fecha:f.fecha,concepto:cn,prod:f.prod||'',cant:p?q:0,monto:mo,lista:+(mo+dsc).toFixed(2),desc:dsc,costo:p?+(p.costo*q).toFixed(2):0,ts:Date.now()});toast(dsc>0?'Ingreso registrado (con descuento de '+fmt(dsc)+')':'Ingreso registrado')}
+  S.ingresos.push({id:uid(),fecha:f.fecha,concepto:cn,cat:p?p.cat:(f.cat||''),prod:f.prod||'',cant:p?q:0,monto:mo,lista:+(mo+dsc).toFixed(2),desc:dsc,costo:p?+(p.costo*q).toFixed(2):0,ts:Date.now()});toast(dsc>0?'Ingreso registrado (con descuento de '+fmt(dsc)+')':'Ingreso registrado')}
  else if(k==='ret'){const mo=+f.monto,disp=gsum(S.ingresos).g-sum(RT(),'monto');
   if(mo>disp+.005&&!await ask('Vas a retirar '+fmt(mo)+' pero solo hay '+fmt(disp)+' de ganancia real disponible. ¿Registrar igual?'))return;
   RT().push({id:uid(),fecha:f.fecha,tipo:f.tipo,monto:mo,nota:(f.nota||'').trim(),ts:Date.now()});toast('Retiro registrado')}
