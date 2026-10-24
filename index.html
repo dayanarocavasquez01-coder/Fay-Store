@@ -49,9 +49,13 @@ nav button.on{background:linear-gradient(135deg,#f08fb2,#b7a3ee);color:#fff;bord
 .step h3{margin:0}.step small{color:var(--mut)}.step ol{margin:8px 0;padding-left:20px}.step li{margin:4px 0}
 .chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px;max-height:260px;overflow:auto}
 #sheet{display:flex;flex-wrap:wrap;gap:6px}
-.lb{width:5.4cm;height:3.2cm;background:#fff;color:#241f4d;border:1.5px dashed #e8648f;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.lbs{font:700 18px/1 'Dancing Script',cursive;color:#e8648f}.lbs i{font:normal 8px sans-serif;letter-spacing:.3em;color:#7a7399}
-.lbn{font-weight:700;font-size:12px}.lbd{font-size:10px;color:#7a7399}.lbc{font:700 20px ui-monospace,Menlo,monospace;letter-spacing:1px;margin-top:2px}.lbp{font-weight:700;font-size:12px;color:#e8648f}
+.lb{width:5.4cm;height:3.2cm;color:#241f4d;border:1.5px solid transparent;border-radius:12px;background:linear-gradient(160deg,#fff7f4 0%,#fdeaf2 55%,#ece6fb 100%) padding-box,linear-gradient(135deg,#f06b9b,#b7a3ee 55%,#7aa7e8) border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3px 6px;overflow:hidden;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.lb:before{content:'\2726';position:absolute;left:7px;top:5px;font-size:9px;color:#a78bfa;opacity:.8}.lb:after{content:'\2726';position:absolute;right:7px;bottom:5px;font-size:9px;color:#7aa7e8;opacity:.8}
+.lbs{font:400 30px/.95 'Mr Dafoe','Dancing Script',cursive;color:#241f4d;text-shadow:0 0 3px #fff,1.5px 1.5px 0 #f9c6da;flex-shrink:0;padding:0 4px}
+.lbst{display:flex;align-items:center;justify-content:center;gap:5px;font:700 6.5px/1 Nunito,sans-serif;letter-spacing:.38em;color:#241f4d;margin:-1px 0 2px;flex-shrink:0}.lbst:before,.lbst:after{content:'';width:15px;height:1px;background:#b7a3ee}.lbst span{margin-right:-.38em}
+.lbn{font-weight:700;font-size:10.5px;line-height:1.15;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}.lbd{font-size:8.5px;line-height:1.15;color:#7a7399;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.lbc{font:700 14px/1.1 ui-monospace,Menlo,monospace;letter-spacing:1px;margin-top:1px;flex-shrink:0}
+.lbp{font:800 12.5px/1 Nunito,sans-serif;color:#fff;background:linear-gradient(135deg,#f06b9b,#c07ad8);border-radius:99px;padding:2px 10px;margin-top:2px;flex-shrink:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 input,select{font-size:16px}.btn{min-height:40px}.btn.s{min-height:32px}
 .sv{display:inline-block;margin-top:8px;font-size:12px;background:var(--card);border:1px solid var(--bd);border-radius:99px;padding:3px 12px;color:var(--mut)}
 .mdl{position:fixed;inset:0;background:#0007;display:grid;place-items:center;z-index:20;padding:16px}.mb{background:var(--card);color:var(--tx);padding:18px;border-radius:14px;max-width:320px;text-align:center}.mb p{margin:0 0 14px}
@@ -59,7 +63,7 @@ input,select{font-size:16px}.btn{min-height:40px}.btn.s{min-height:32px}
 @page{margin:8mm}
 @media print{body{background:#fff!important}body *{visibility:hidden}#sheet,#sheet *{visibility:visible}#sheet{position:absolute;left:0;top:0;width:100%}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Mr+Dafoe&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -179,7 +183,7 @@ function drawL(){
  const c=$('#lc').value,n=Math.max(1,+$('#ln').value||1),pr=$('#lp').checked,det=p=>esc([p.det||p.attr,p.marca].filter(Boolean).join(' · '));
  const L=S.productos.filter(p=>!c||p.cat===c);
  $('#llist').innerHTML=L.length?L.map(p=>`<label class='ck'><input type='checkbox' class='lk' data-id='${p.id}' ${lnot.has(p.id)?'':'checked'}> <b>${esc(p.cod)}</b> ${esc(p.nom)}</label>`).join(''):'<div class="empty">Primero registra productos.</div>';
- $('#sheet').innerHTML=S.productos.filter(p=>!lnot.has(p.id)).map(p=>`<div class='lb'><div class='lbs'>Fay <i>STORE</i></div><div class='lbn'>${esc(p.nom)}</div><div class='lbd'>${det(p)}</div><div class='lbc'>${esc(p.cod)}</div>${pr?`<div class='lbp'>${fmt(p.precio)}</div>`:''}</div>`.repeat(n)).join('')}
+ $('#sheet').innerHTML=S.productos.filter(p=>!lnot.has(p.id)).map(p=>`<div class='lb'><div class='lbs'>Fay</div><div class='lbst'><span>STORE</span></div><div class='lbn'>${esc(p.nom)}</div><div class='lbd'>${det(p)}</div><div class='lbc'>${esc(p.cod)}</div>${pr?`<div class='lbp'>${fmt(p.precio)}</div>`:''}</div>`.repeat(n)).join('')}
 const DEFURL='https://script.google.com/macros/s/AKfycbzsTlqcQhUZGnyd3o_oerzP9obGFb2tB2lW087A77EktYF9A3cKSCvxAsy3wU_1CQ77/exec';
 let CFG=(()=>{let c={};try{c=JSON.parse(localStorage.getItem('fay-sync')||'{}')||{}}catch(e){}if(!c.url)c.url=DEFURL;return c})(),BASE=0,lastErr='',cst='local',cTm=0,cBusy=false,cDirty=false,cAt='';
 const CL=()=>!!(CFG.url&&CFG.key);
@@ -237,19 +241,33 @@ function pdfReport(){
  T('Inversiones',['Fecha','Concepto','Monto'],dt(S.inversiones).map(i=>[i.fecha,i.concepto,fmt(i.monto)]));
  T('Deudas',['Tipo','Persona','Detalle','Monto','Pagado','Saldo','Vence'],S.deudas.map(d=>[d.tipo,d.persona,d.concepto,fmt(d.monto),fmt(d.pagado),fmt(d.monto-d.pagado),d.vence||'-']));
  saveFile('fay-store-reporte-'+today()+'.pdf',doc.output('arraybuffer'))}
-function pdfLabels(){
+function labelHead(){
+ const W=648,H=144,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ x.textAlign='center';x.lineJoin='round';
+ x.font="100px 'Mr Dafoe','Dancing Script',cursive";
+ x.strokeStyle='#f9c6da';x.lineWidth=9;x.strokeText('Fay',W/2,96);
+ x.fillStyle='#241f4d';x.fillText('Fay',W/2,96);
+ x.font="700 20px Nunito,Helvetica,Arial,sans-serif";x.textAlign='left';x.fillStyle='#241f4d';
+ const t='STORE',sp=8,ws=[...t].map(ch=>x.measureText(ch).width),tw=ws.reduce((a,b)=>a+b,0)+sp*(t.length-1);
+ let px=(W-tw)/2;[...t].forEach((ch,k)=>{x.fillText(ch,px,132);px+=ws[k]+sp});
+ x.strokeStyle='#b7a3ee';x.lineWidth=2;x.beginPath();x.moveTo((W-tw)/2-60,126);x.lineTo((W-tw)/2-14,126);x.moveTo((W+tw)/2+14,126);x.lineTo((W+tw)/2+60,126);x.stroke();
+ return c.toDataURL('image/png')}
+async function pdfLabels(){
  const J=jsP();if(!J)return toast('No se cargó el generador de PDF. Revisa tu conexión.');
  const n=Math.max(1,+$('#ln').value||1),pr=$('#lp').checked,A=[];
  S.productos.filter(p=>!lnot.has(p.id)).forEach(p=>{for(let i=0;i<n;i++)A.push(p)});
  if(!A.length)return toast('Marca al menos un producto.');
+ let hd=null;try{if(document.fonts){await document.fonts.load("100px 'Mr Dafoe'");await document.fonts.load("700 20px Nunito")}hd=labelHead()}catch(e){}
  const doc=new J({unit:'mm',format:'a4'}),w=54,h=32;
  A.forEach((p,i)=>{if(i&&i%24===0)doc.addPage();const k=i%24,x=14+(k%3)*(w+4),y=10+Math.floor(k/3)*(h+2),c=x+w/2;
-  doc.setDrawColor(232,100,143);doc.setLineDashPattern([1.5,1.5],0);doc.roundedRect(x,y,w,h,2,2);doc.setLineDashPattern([],0);
-  doc.setTextColor(232,100,143);doc.setFont('times','bolditalic');doc.setFontSize(13);doc.text('Fay STORE',c,y+7,{align:'center'});
-  doc.setTextColor(36,31,77);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(doc.splitTextToSize(p.nom,w-4)[0],c,y+13,{align:'center'});
-  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(122,115,153);doc.text(doc.splitTextToSize([p.det||p.attr,p.marca].filter(Boolean).join(' · '),w-4)[0]||'',c,y+17,{align:'center'});
-  doc.setTextColor(36,31,77);doc.setFont('courier','bold');doc.setFontSize(15);doc.text(p.cod,c,y+24,{align:'center'});
-  if(pr){doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(232,100,143);doc.text('Bs '+(+p.precio).toFixed(2),c,y+29,{align:'center'})}});
+  doc.setFillColor(254,243,246);doc.setDrawColor(240,107,155);doc.setLineWidth(.3);doc.roundedRect(x,y,w,h,2.5,2.5,'FD');
+  if(hd)doc.addImage(hd,'PNG',x,y+1,w,12);
+  else{doc.setTextColor(36,31,77);doc.setFont('times','bolditalic');doc.setFontSize(18);doc.text('Fay',c,y+8,{align:'center'});doc.setFontSize(6);doc.setFont('helvetica','bold');doc.text('S T O R E',c,y+11.5,{align:'center'})}
+  doc.setTextColor(36,31,77);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(doc.splitTextToSize(p.nom,w-6)[0],c,y+16,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(122,115,153);doc.text(doc.splitTextToSize([p.det||p.attr,p.marca].filter(Boolean).join(' · '),w-6)[0]||'',c,y+19.3,{align:'center'});
+  doc.setTextColor(36,31,77);doc.setFont('courier','bold');doc.setFontSize(12);doc.text(p.cod,c,y+24.2,{align:'center'});
+  if(pr){const t='Bs '+(+p.precio).toFixed(2);doc.setFont('helvetica','bold');doc.setFontSize(9);const pw=doc.getTextWidth(t)+6;
+   doc.setFillColor(240,107,155);doc.roundedRect(c-pw/2,y+25.8,pw,4.6,2.3,2.3,'F');doc.setTextColor(255,255,255);doc.text(t,c,y+29.1,{align:'center'})}});
  saveFile('fay-store-etiquetas-'+today()+'.pdf',doc.output('arraybuffer'))}
 function restore(f){if(!f)return;const r=new FileReader();r.onload=async()=>{try{const D=JSON.parse(r.result);if(!D.cats||!Array.isArray(D.productos))throw 0;
  if(!await ask('Esto reemplazará tus datos actuales por los del respaldo. ¿Continuar?'))return;
@@ -307,7 +325,7 @@ etiquetas(){
  return `<div class='card'><h2>🏷️ Etiquetas para imprimir</h2>
  <div class='grid'><label>Ver categoría<select id='lc'><option value=''>Todas</option>${opts(Object.keys(S.cats))}</select></label>
  <label>Copias por producto<input id='ln' type='number' min='1' max='50' value='1'></label>
- <label class='ck'><input type='checkbox' id='lp'> Mostrar precio</label>
+ <label class='ck'><input type='checkbox' id='lp' checked> Mostrar precio</label>
  <button class='btn' data-act='lpdf'>📄 Descargar PDF</button> <button class='btn x s' data-print='1'>🖨️ Imprimir</button></div>
  <p><button class='btn s' data-lsel='1'>Marcar todos</button> <button class='btn x s' data-lsel='0'>Quitar todos</button></p>
  <div id='llist' class='chk'></div></div>
