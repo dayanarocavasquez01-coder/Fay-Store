@@ -187,6 +187,12 @@ input,select,textarea{color:var(--tx)!important;font-weight:500}
 .chip{color:var(--tx);background:var(--card)}
 .card,.kpi{background:var(--card)}
 .demo{color:#241f4d}
+
+/* ===== MENÚ: palabras completas ===== */
+nav{scrollbar-width:thin;-webkit-overflow-scrolling:touch;scroll-padding:0 16px}
+nav button{flex:0 0 auto!important;width:auto!important;min-width:max-content;max-width:none!important;white-space:nowrap!important;text-overflow:clip!important;overflow:visible!important;padding:10px 18px}
+nav button.on:after{display:none}
+nav button.on:before{content:'';position:absolute;inset:2px 10px auto 10px;height:40%;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0));pointer-events:none}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Mr+Dafoe&family=Nunito:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -891,4 +897,6 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&CL()&&!cB
    d.innerHTML='<span>⭐ Nivel '+lv+'<b class="xpb"><i style="width:'+pr+'%"></i></b></span><span>💰 Hoy: '+fmt(tot)+'</span><span>🛍️ '+hoy.length+' venta'+(hoy.length===1?'':'s')+' hoy</span><span>💖 '+(S.productos||[]).length+' productos</span>'}catch(e){}}
  const _r=render;render=function(){_r.apply(this,arguments);hud()};hud();
 })();
+
+(function(){const _r2=render;render=function(){_r2.apply(this,arguments);const o=document.querySelector('nav button.on');if(o&&o.scrollIntoView)o.scrollIntoView({inline:'center',block:'nearest'})}})();
 </script></body></html>
