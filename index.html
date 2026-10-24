@@ -49,10 +49,10 @@ nav button.on{background:linear-gradient(135deg,#f08fb2,#b7a3ee);color:#fff;bord
 .step h3{margin:0}.step small{color:var(--mut)}.step ol{margin:8px 0;padding-left:20px}.step li{margin:4px 0}
 .chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px;max-height:260px;overflow:auto}
 #sheet{display:flex;flex-wrap:wrap;gap:6px}
-.lb{width:5.4cm;height:3.2cm;color:#241f4d;border:1.5px solid transparent;border-radius:12px;background:linear-gradient(160deg,#fff7f4 0%,#fdeaf2 55%,#ece6fb 100%) padding-box,linear-gradient(135deg,#f06b9b,#b7a3ee 55%,#7aa7e8) border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 6px;overflow:hidden;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.lb:before{content:'\2726';position:absolute;left:7px;top:5px;font-size:9px;color:#a78bfa;opacity:.8}.lb:after{content:'\2726';position:absolute;right:7px;top:5px;font-size:9px;color:#7aa7e8;opacity:.8}
-.lbs{font:400 26px/.95 'Mr Dafoe','Dancing Script',cursive;color:#241f4d;text-shadow:0 0 3px #fff,0 0 5px #a9ccf7,1.5px 1.5px 0 #a9ccf7;flex-shrink:0;padding:0 4px}
-.lbst{display:flex;align-items:center;justify-content:center;gap:5px;font:700 6px/1 Nunito,sans-serif;letter-spacing:.38em;color:#4f8fe0;margin:-1px 0 1px;flex-shrink:0}.lbst:before,.lbst:after{content:'';width:15px;height:1px;background:#a9ccf7}.lbst span{margin-right:-.38em}
+.lb{width:5.4cm;height:3.2cm;color:#241f4d;border:2.5px solid transparent;border-radius:12px;background:linear-gradient(150deg,rgba(255,247,250,.93) 0%,rgba(253,232,242,.88) 40%,rgba(236,230,252,.9) 70%,rgba(226,240,255,.93) 100%) padding-box,linear-gradient(135deg,#f06b9b 0%,#b58be8 50%,#6fb2f2 100%) border-box;box-shadow:inset 0 0 9px rgba(240,107,155,.28),inset 0 0 14px rgba(111,178,242,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 6px;overflow:hidden;position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.lb:before{content:'\2726';position:absolute;left:7px;top:5px;font-size:9px;color:#b58be8;opacity:.9}.lb:after{content:'\2726';position:absolute;right:7px;top:5px;font-size:9px;color:#6fb2f2;opacity:.9}
+.lbs{display:block;width:4.1cm;height:1.02cm;flex-shrink:0;overflow:visible}
+.lbst{display:flex;align-items:center;justify-content:center;gap:5px;font:700 6.5px/1 Nunito,sans-serif;letter-spacing:.38em;color:#241f4d;margin:-1px 0 1px;flex-shrink:0}.lbst:before,.lbst:after{content:'';width:15px;height:1.5px;border-radius:2px;background:linear-gradient(90deg,#f06b9b,#b58be8,#6fb2f2)}.lbst span{margin-right:-.38em}
 .lbn{font-weight:700;font-size:10px;line-height:1.15;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}.lbd{font-size:8px;line-height:1.15;color:#7a7399;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
 .lbb{display:block;width:4.5cm;height:.68cm;background:#fff;border-radius:3px;margin-top:2px;flex-shrink:0}
 .lbr{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:2px;flex-shrink:0}
@@ -75,7 +75,7 @@ input,select{font-size:16px}.btn{min-height:40px}.btn.s{min-height:32px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script></head><body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script></head><body><svg width='0' height='0' style='position:absolute' aria-hidden='true'><defs><linearGradient id='fayg' gradientUnits='userSpaceOnUse' x1='0' y1='0' x2='164' y2='40'><stop offset='0' stop-color='#f06b9b'/><stop offset='.5' stop-color='#b58be8'/><stop offset='1' stop-color='#6fb2f2'/></linearGradient></defs></svg>
 <header class="hd"><span class="fay">Fay</span><span class="st">— STORE —</span><div class="sub"><span class="sp">♡</span> Control de productos, ventas y ganancias <span class="sp">✦</span></div><div id="sv" class="sv"></div></header>
 <nav id="nav"></nav><main id="app"></main><div id="toast"></div>
 <script>
@@ -107,7 +107,7 @@ S.listas=Object.assign(JSON.parse(JSON.stringify(DEF.listas)),S.listas||{});
 const save=()=>{S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}queueCloud()};
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2600)}
 const EG=['Compra de mercadería','Transporte','Publicidad','Servicios','Alquiler','Otros'];
-const TABS=[['guia','📖 Guía'],['resumen','📊 Dashboard'],['productos','Productos'],['vender','📷 Vender'],['ingresos','Ingresos'],['ganancia','💎 Ganancia real'],['descuentos','💸 Descuentos'],['egresos','Egresos'],['inversiones','Inversión'],['deudas','Deudas'],['etiquetas','🏷️ Etiquetas'],['respaldo','💾 Respaldo y PDF'],['catalogos','⚙️ Listas']];
+const TABS=[['guia','📖 Guía'],['resumen','📊 Dashboard'],['productos','Productos'],['vender','📷 Vendido'],['ingresos','Ingresos'],['ganancia','💎 Ganancia real'],['descuentos','💸 Descuentos'],['egresos','Egresos'],['inversiones','Inversión'],['deudas','Deudas'],['etiquetas','🏷️ Etiquetas'],['respaldo','💾 Respaldo y PDF'],['catalogos','⚙️ Listas']];
 let tab=S.productos.length?'resumen':'guia',selL='c|'+Object.keys(S.cats)[0]+'|0';
 const getL=ref=>{const p=ref.split('|');
  if(p[0]==='g'){const n={ing:'Ingresos › Concepto',egr:'Egresos › Concepto',inv:'Inversión › Concepto',deu:'Deudas › Detalle',per:'Deudas › Persona / entidad'}[p[1]];return{arr:S.listas[p[1]],name:n}}
@@ -191,7 +191,7 @@ function drawL(){
  const c=$('#lc').value,n=Math.max(1,+$('#ln').value||1),pr=$('#lp').checked,det=p=>esc([p.det||p.attr,p.marca].filter(Boolean).join(' · '));
  const L=S.productos.filter(p=>!c||p.cat===c);
  $('#llist').innerHTML=L.length?L.map(p=>`<label class='ck'><input type='checkbox' class='lk' data-id='${p.id}' ${lnot.has(p.id)?'':'checked'}> <b>${esc(p.cod)}</b> ${esc(p.nom)}</label>`).join(''):'<div class="empty">Primero registra productos.</div>';
- $('#sheet').innerHTML=S.productos.filter(p=>!lnot.has(p.id)).map(p=>`<div class='lb'><div class='lbs'>Fay</div><div class='lbst'><span>STORE</span></div><div class='lbn'>${esc(p.nom)}</div><div class='lbd'>${det(p)}</div>${barSVG(p.cod)}<div class='lbr'><span class='lbc'>${esc(p.cod)}</span>${pr?`<span class='lbp'>${fmt(p.precio)}</span>`:''}</div></div>`.repeat(n)).join('')}
+ $('#sheet').innerHTML=S.productos.filter(p=>!lnot.has(p.id)).map(p=>`<div class='lb'><svg class='lbs' viewBox='0 0 164 40'><text x='82' y='31' text-anchor='middle' font-family="'Mr Dafoe','Dancing Script',cursive" font-size='36' stroke='url(#fayg)' stroke-width='6' stroke-linejoin='round' fill='#241f4d'>Fay</text><text x='82' y='31' text-anchor='middle' font-family="'Mr Dafoe','Dancing Script',cursive" font-size='36' stroke='#fff' stroke-width='2.2' stroke-linejoin='round' fill='#241f4d'>Fay</text><text x='82' y='31' text-anchor='middle' font-family="'Mr Dafoe','Dancing Script',cursive" font-size='36' fill='#241f4d'>Fay</text></svg><div class='lbst'><span>STORE</span></div><div class='lbn'>${esc(p.nom)}</div><div class='lbd'>${det(p)}</div>${barSVG(p.cod)}<div class='lbr'><span class='lbc'>${esc(p.cod)}</span>${pr?`<span class='lbp'>${fmt(p.precio)}</span>`:''}</div></div>`.repeat(n)).join('')}
 const DEFURL='https://script.google.com/macros/s/AKfycbzsTlqcQhUZGnyd3o_oerzP9obGFb2tB2lW087A77EktYF9A3cKSCvxAsy3wU_1CQ77/exec';
 let CFG=(()=>{let c={};try{c=JSON.parse(localStorage.getItem('fay-sync')||'{}')||{}}catch(e){}if(!c.url)c.url=DEFURL;return c})(),BASE=0,lastErr='',cst='local',cTm=0,cBusy=false,cDirty=false,cAt='';
 const CL=()=>!!(CFG.url&&CFG.key);
@@ -254,25 +254,40 @@ function pdfReport(){
 function labelHead(){
  const W=648,H=144,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
  x.textAlign='center';x.lineJoin='round';
+ const g=x.createLinearGradient(150,0,500,H);g.addColorStop(0,'#f06b9b');g.addColorStop(.5,'#b58be8');g.addColorStop(1,'#6fb2f2');
  x.font="100px 'Mr Dafoe','Dancing Script',cursive";
- x.strokeStyle='#a9ccf7';x.lineWidth=9;x.strokeText('Fay',W/2,96);
+ x.strokeStyle=g;x.lineWidth=14;x.strokeText('Fay',W/2,96);
+ x.strokeStyle='#fff';x.lineWidth=6;x.strokeText('Fay',W/2,96);
  x.fillStyle='#241f4d';x.fillText('Fay',W/2,96);
- x.font="700 20px Nunito,Helvetica,Arial,sans-serif";x.textAlign='left';x.fillStyle='#4f8fe0';
+ x.font="700 20px Nunito,Helvetica,Arial,sans-serif";x.textAlign='left';x.fillStyle='#241f4d';
  const t='STORE',sp=8,ws=[...t].map(ch=>x.measureText(ch).width),tw=ws.reduce((a,b)=>a+b,0)+sp*(t.length-1);
  let px=(W-tw)/2;[...t].forEach((ch,k)=>{x.fillText(ch,px,132);px+=ws[k]+sp});
- x.strokeStyle='#a9ccf7';x.lineWidth=2;x.beginPath();x.moveTo((W-tw)/2-60,126);x.lineTo((W-tw)/2-14,126);x.moveTo((W+tw)/2+14,126);x.lineTo((W+tw)/2+60,126);x.stroke();
+ const lg=x.createLinearGradient(0,0,W,0);lg.addColorStop(0,'#f06b9b');lg.addColorStop(.5,'#b58be8');lg.addColorStop(1,'#6fb2f2');
+ x.strokeStyle=lg;x.lineWidth=3;x.lineCap='round';x.beginPath();x.moveTo((W-tw)/2-60,126);x.lineTo((W-tw)/2-14,126);x.moveTo((W+tw)/2+14,126);x.lineTo((W+tw)/2+60,126);x.stroke();
+ return c.toDataURL('image/png')}
+function labelBg(){
+ const W=648,H=384,r=40,b=14,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ const rr=(i,rad)=>{x.beginPath();x.roundRect(i,i,W-2*i,H-2*i,rad)};
+ const fr=x.createLinearGradient(0,0,W,H);fr.addColorStop(0,'#f06b9b');fr.addColorStop(.5,'#b58be8');fr.addColorStop(1,'#6fb2f2');
+ rr(0,r);x.fillStyle=fr;x.fill();
+ const bg=x.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#fff5f9');bg.addColorStop(.4,'#fde6f1');bg.addColorStop(.7,'#ece6fc');bg.addColorStop(1,'#e2f0ff');
+ rr(b,r-b);x.fillStyle=bg;x.fill();
+ x.save();rr(b,r-b);x.clip();
+ [[0,0,'rgba(240,107,155,.30)'],[W,H,'rgba(111,178,242,.30)'],[W,0,'rgba(181,139,232,.25)']].forEach(([cx,cy,col])=>{const rg=x.createRadialGradient(cx,cy,0,cx,cy,230);rg.addColorStop(0,col);rg.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=rg;x.fillRect(0,0,W,H)});
+ x.restore();
+ x.font='34px sans-serif';x.textAlign='center';x.fillStyle='#b58be8';x.fillText('\u2726',52,62);x.fillStyle='#6fb2f2';x.fillText('\u2726',W-52,62);
  return c.toDataURL('image/png')}
 async function pdfLabels(){
  const J=jsP();if(!J)return toast('No se cargó el generador de PDF. Revisa tu conexión.');
  const n=Math.max(1,+$('#ln').value||1),pr=$('#lp').checked,A=[];
  S.productos.filter(p=>!lnot.has(p.id)).forEach(p=>{for(let i=0;i<n;i++)A.push(p)});
  if(!A.length)return toast('Marca al menos un producto.');
- let hd=null;try{if(document.fonts){await document.fonts.load("100px 'Mr Dafoe'");await document.fonts.load("700 20px Nunito")}hd=labelHead()}catch(e){}
+ let hd=null,bgi=null;try{if(document.fonts){await document.fonts.load("100px 'Mr Dafoe'");await document.fonts.load("700 20px Nunito")}hd=labelHead();bgi=labelBg()}catch(e){}
  const doc=new J({unit:'mm',format:'a4'}),w=54,h=32;
  A.forEach((p,i)=>{if(i&&i%24===0)doc.addPage();const k=i%24,x=14+(k%3)*(w+4),y=10+Math.floor(k/3)*(h+2),c=x+w/2;
-  doc.setFillColor(254,243,246);doc.setDrawColor(240,107,155);doc.setLineWidth(.3);doc.roundedRect(x,y,w,h,2.5,2.5,'FD');
+  if(bgi)doc.addImage(bgi,'PNG',x,y,w,h);else{doc.setFillColor(254,243,246);doc.setDrawColor(240,107,155);doc.setLineWidth(.3);doc.roundedRect(x,y,w,h,2.5,2.5,'FD')}
   if(hd)doc.addImage(hd,'PNG',x+3,y+.6,w-6,(w-6)/4.5);
-  else{doc.setTextColor(36,31,77);doc.setFont('times','bolditalic');doc.setFontSize(16);doc.text('Fay',c,y+7,{align:'center'});doc.setFontSize(6);doc.setFont('helvetica','bold');doc.setTextColor(79,143,224);doc.text('S T O R E',c,y+10.5,{align:'center'})}
+  else{doc.setTextColor(36,31,77);doc.setFont('times','bolditalic');doc.setFontSize(16);doc.text('Fay',c,y+7,{align:'center'});doc.setFontSize(6);doc.setFont('helvetica','bold');doc.setTextColor(36,31,77);doc.text('S T O R E',c,y+10.5,{align:'center'})}
   doc.setTextColor(36,31,77);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(doc.splitTextToSize(p.nom,w-6)[0],c,y+14.2,{align:'center'});
   doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(122,115,153);doc.text(doc.splitTextToSize([p.det||p.attr,p.marca].filter(Boolean).join(' · '),w-6)[0]||'',c,y+17.2,{align:'center'});
   const bits=c128bits(p.cod);
@@ -325,21 +340,48 @@ respaldo(){
  <p style='color:var(--mut);font-size:13px'>El PDF y el Excel incluyen resumen, productos, ingresos, egresos, inversiones y deudas. Las etiquetas en PDF se descargan desde la pestaña Etiquetas.</p></div>
  <div class='card'><h2>♻️ Restaurar un respaldo</h2><label>Elige el archivo .json que descargaste<input id='rf' type='file' accept='.json,application/json'></label></div>`},
 guia(){
- const st=[
- ['⚙️','Prepara tus listas','Solo la primera vez','<ol><li>Entra a <b>Listas</b> y revisa las opciones de ejemplo.</li><li>Si falta alguna, agrégala. También puedes hacerlo desde cualquier desplegable con <b>➕ Agregar nueva…</b>.</li><li>Guarda: la opción queda disponible para siempre.</li></ol>','catalogos','Ir a Listas'],
- ['🛍️','Registra tus productos','Pestaña Productos','<ol><li>Elige la <b>categoría</b>. El <b>código</b> aparece solo (2 letras + número, ej. RO-001).</li><li>Elige el producto y su detalle en los desplegables.</li><li>Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.</li><li>Escribe el <b>costo</b>: el precio se sugiere solo (+50%). Puedes cambiarlo.</li><li>Toma una <b>foto</b> del producto (opcional) con 📷 o elígela de la galería.</li><li>Indica el <b>stock</b> y toca <b>Guardar producto</b>.</li></ol>','productos','Ir a Productos'],
- ['📷','Vende con la cámara','Pestaña Vender','<ol><li>Imprime las etiquetas: cada una lleva un <b>código de barras</b>.</li><li>En <b>Vender</b> toca <b>Abrir cámara</b> y apunta al código.</li><li>La venta se guarda sola: baja el stock y se separa el <b>costo</b> de la <b>ganancia</b>.</li><li>¿Diste descuento? Escríbelo en «Descuento para la próxima venta» (en % o Bs) antes de escanear.</li><li>Si te equivocas, en «Ventas de hoy» usa <b>Editar</b> o <b>Eliminar</b> (el stock se devuelve).</li></ol>','vender','Ir a Vender'],
- ['💎','Mira tu ganancia real','Pestaña Ganancia real','<ol><li>Revisa cuánto has ganado de verdad (lo vendido − el costo de lo vendido).</li><li>Cuando saques dinero, regístralo como <b>Pago personal</b> o <b>Reinversión</b>.</li><li>Mira cuánto te queda <b>disponible</b>.</li></ol>','ganancia','Ir a Ganancia real'],
- ['💰','Registra cada venta','Pestaña Ingresos','<ol><li>Elige el <b>concepto</b> (ej. Venta de productos).</li><li>Elige el <b>producto</b> y la cantidad: el monto se calcula solo y el stock baja automáticamente.</li><li>Toca <b>Guardar</b>. Si no vendiste un producto de la lista, deja «ninguno» y escribe el monto.</li></ol>','ingresos','Ir a Ingresos'],
- ['🧾','Anota tus gastos','Pestaña Egresos','<ol><li>Elige el <b>concepto</b> (mercadería, transporte, publicidad…).</li><li>Escribe el <b>monto</b>.</li><li>Toca <b>Guardar</b>. Aquí va todo lo que sale de tu bolsillo.</li></ol>','egresos','Ir a Egresos'],
- ['🌱','Anota lo que invertiste','Pestaña Inversión','<ol><li>Elige el <b>concepto</b> (capital inicial, equipos…).</li><li>Escribe el <b>monto</b> y toca <b>Guardar</b>.</li><li>Así sabrás cuánto has recuperado de lo que pusiste.</li></ol>','inversiones','Ir a Inversión'],
- ['🤝','Controla tus deudas','Pestaña Deudas','<ol><li>Elige <b>Por pagar</b> (tú debes) o <b>Por cobrar</b> (te deben).</li><li>Completa la persona, el detalle y el monto, y guarda.</li><li>Cuando haya un pago, escribe el monto en la fila y toca <b>+</b>: el saldo se actualiza solo.</li></ol>','deudas','Ir a Deudas'],
- ['🏷️','Imprime tus etiquetas','Pestaña Etiquetas','<ol><li>Marca los productos que quieras (o todos).</li><li>Elige cuántas copias necesitas.</li><li>Toca <b>Imprimir</b> o <b>Descargar PDF</b>. Cada etiqueta lleva el nombre de la tienda, el código de barras y el precio.</li></ol>','etiquetas','Ir a Etiquetas'],
- ['📊','Mira cómo te va','Pestaña Dashboard','<ol><li>Elige el período (este mes, 90 días, año…).</li><li>Revisa tus ventas, gastos y ganancia en los gráficos. Pasa el dedo o el mouse sobre ellos para ver los montos.</li><li>Si quieres practicar, usa <b>Ver con datos de ejemplo</b>: no se guarda nada.</li></ol>','resumen','Ir al Dashboard'],
- ['💾','Guarda y descarga','Pestaña Respaldo y PDF','<ol><li>No hace falta guardar: todo se guarda solo cada vez que registras algo.</li><li>De vez en cuando, toca <b>Descargar respaldo</b>.</li><li>Si necesitas recuperar tus datos, usa <b>Restaurar</b>. Para el reporte, baja el <b>PDF</b>.</li></ol>','respaldo','Ir a Respaldo']];
- return `<div class='card'><h2>👋 Cómo empezar</h2><p style='margin:0'>Esta herramienta te ayuda a llevar el control de tu tienda sin cuentas complicadas. Solo debes <b>elegir de listas y escribir montos</b>: el sistema calcula todo lo demás. La primera vez, sigue los pasos en orden.</p><p style='margin:8px 0 0;color:var(--mut)'>💾 Todo se guarda solo, en este dispositivo. Si conectas la Hoja de Google (pestaña Respaldo), también se comparte entre todos los dispositivos conectados.</p></div>
- ${st.map((s,i)=>`<div class='card step'><div class='num'>${i+1}</div><div><h3>${s[0]} ${s[1]}</h3><small>${s[2]}</small><div style='margin-top:6px'><div class='sp' style='font-weight:700'>Lo que debes hacer:</div>${s[3]}</div><p style='margin:8px 0 0'><button class='btn s' data-tab='${s[4]}'>${s[5]} →</button></p></div></div>`).join('')}
- <div class='card'><h2>📚 Palabras clave</h2><ul><li><b>Ingresos:</b> el dinero que entra por tus ventas.</li><li><b>Egresos:</b> el dinero que gastas.</li><li><b>Ganancia:</b> ingresos − egresos.</li><li><b>Ganancia real:</b> lo vendido − el costo de lo vendido.</li><li><b>Inversión:</b> dinero que pones para empezar o crecer.</li><li><b>Margen:</b> qué parte de lo vendido es ganancia.</li><li><b>Retorno sobre inversión:</b> cuánto has ganado comparado con lo invertido.</li></ul></div>
+ const sec=[
+ ['📊','Dashboard','Para ver cómo va tu negocio de un vistazo',
+  ['<b>Período:</b> este mes, últimos 30 o 90 días, este año o todo el tiempo.','<b>Ver con datos de ejemplo:</b> muestra datos inventados para practicar; no se guarda nada.','<b>Resumen en una frase:</b> cuánto vendiste, cuánto gastaste y cuál es tu ganancia, comparado con el período anterior.','<b>Tarjetas:</b> Ventas, Gastos, Ganancia, Ganancia real, Ganancia real disponible, Descuentos dados, Margen, Venta promedio, Total invertido, Retorno sobre inversión, Por pagar, Por cobrar, Valor del inventario y Stock bajo (productos con 2 unidades o menos).','<b>Gráficos:</b> Ingresos vs egresos, Ganancia acumulada, Ventas por categoría, Ventas por marca, Productos más vendidos y En qué gastas. Pasa el dedo o el mouse sobre ellos para ver los montos.'],
+  ['Elige el período que quieres revisar.','Lee la frase del resumen y las tarjetas.','Mira los gráficos para entender de dónde viene tu dinero y en qué se va.','Revisa «Stock bajo» para saber qué productos debes reponer.'],'resumen','Ir al Dashboard'],
+ ['🛍️','Productos','Para registrar y controlar lo que vendes',
+  ['<b>Nuevo producto:</b> categoría, código (sale solo, ej. RO-001), producto y detalle (desplegables), «Lleva marca», costo, precio de venta, stock inicial y foto.','<b>Inventario:</b> tabla con foto, código, producto, categoría, detalle, costo, precio, margen y stock, con buscador y botones Editar y Eliminar.'],
+  ['Elige la <b>categoría</b>: el código aparece solo.','Elige el producto y su detalle en los desplegables.','Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.','Escribe el <b>costo</b>: el precio se sugiere solo (+50%). Puedes cambiarlo.','Indica el <b>stock</b> y, si quieres, toma una foto con 📷 o elígela de la galería.','Toca <b>Guardar producto</b>. Para encontrar uno, escribe en el buscador; toca su foto para verla más grande.'],'productos','Ir a Productos'],
+ ['📷','Vendido','Para registrar lo vendido con la cámara o con un lector',
+  ['<b>Cantidad por venta:</b> cuántas unidades se descuentan en cada escaneo.','<b>Descuento para la próxima venta:</b> en % o en Bs; se aplica al siguiente producto que escanees.','<b>Abrir cámara:</b> escanea el código de barras de la etiqueta (también funciona con un lector USB o Bluetooth).','<b>Escribir el código:</b> si no tienes cámara, escribe el código (ej. RO-001) y toca Vendido.','<b>Ventas de hoy:</b> lista de lo vendido hoy, con Editar y Eliminar.'],
+  ['Imprime las etiquetas desde la pestaña Etiquetas.','Define la cantidad y, si hay, el descuento.','Toca <b>Abrir cámara</b> y apunta al código (o escríbelo).','La venta se guarda sola: baja el stock y se separa el <b>costo</b> de la <b>ganancia</b>.','Si te equivocas, usa <b>Editar</b> o <b>Eliminar</b> en «Ventas de hoy»: el stock se devuelve.'],'vender','Ir a Vendido'],
+ ['💰','Ingresos','Para anotar cada venta o entrada de dinero',
+  ['<b>Registrar ingreso:</b> fecha, concepto (ej. Venta de productos), producto (opcional), cantidad, descuento en % o Bs y precio final.','<b>Precio final:</b> se calcula solo y muestra el precio de lista menos el descuento.','<b>Tabla de ingresos:</b> fecha, concepto, producto, cantidad, monto, descuento, costo y ganancia, con Editar y Eliminar. El total está arriba.'],
+  ['Elige el <b>concepto</b>.','Elige el <b>producto</b> y la cantidad: el precio se calcula solo y el stock baja automáticamente.','Si hay descuento, escríbelo y elige <b>%</b> o <b>Bs</b>: el precio final cambia al instante.','Toca <b>Guardar</b>. Si no vendiste un producto de la lista, deja «ninguno» y escribe el monto.'],'ingresos','Ir a Ingresos'],
+ ['💎','Ganancia real','Para saber cuánto ganaste de verdad y cuánto puedes retirar',
+  ['<b>Tarjetas:</b> Vendido (acumulado), Costo de lo vendido, Ganancia real acumulada, Ya retirado, Disponible, Ganancia real de este mes y Descuentos dados.','<b>Retirar ganancia:</b> fecha, tipo (Pago personal o Reinversión), monto y nota opcional.','<b>Retiros registrados:</b> todo lo que ya sacaste.','<b>Ganancia real por producto:</b> cuáles productos te dejan más ganancia.','Aquí no se restan gastos como transporte o publicidad: esos van en Egresos.'],
+  ['Mira tu ganancia real acumulada y cuánto tienes <b>disponible</b>.','Cuando saques dinero, regístralo en <b>Retirar ganancia</b>.','Si retiras más de lo disponible, la app te avisa antes de guardar.','Revisa la tabla por producto para decidir qué conviene vender más.'],'ganancia','Ir a Ganancia real'],
+ ['💸','Descuentos','Para ver cuánto has rebajado en tus ventas',
+  ['<b>Tarjetas:</b> Descuento dado (acumulado), Descuento de este mes, Ventas con descuento y Descuento promedio.','<b>Ventas con descuento:</b> fecha, producto, precio de lista, descuento, %, cobrado y ganancia.','Esta pestaña solo muestra la información: los descuentos se registran en Vendido o en Ingresos.'],
+  ['Registra el descuento al vender (en Vendido o en Ingresos).','Entra aquí para ver cuánto has rebajado en total y en el mes.','Si el descuento promedio es alto, revisa tus precios.','Si algo está mal, usa <b>Editar</b> o <b>Eliminar</b> en la fila.'],'descuentos','Ir a Descuentos'],
+ ['🧾','Egresos','Para anotar tus gastos',
+  ['<b>Registrar egreso:</b> fecha, concepto (mercadería, transporte, publicidad, servicios, alquiler…) y monto.','<b>Tabla de egresos:</b> fecha, concepto y monto, con Editar y Eliminar. El total está arriba.'],
+  ['Elige el <b>concepto</b>.','Escribe el <b>monto</b>.','Toca <b>Guardar</b>. Aquí va todo lo que sale de tu bolsillo.'],'egresos','Ir a Egresos'],
+ ['🌱','Inversión','Para anotar el dinero que pusiste para empezar o crecer',
+  ['<b>Registrar inversión:</b> fecha, concepto (capital inicial, equipos y materiales…) y monto.','<b>Tabla de inversiones:</b> con Editar y Eliminar. El total está arriba.'],
+  ['Elige el <b>concepto</b>.','Escribe el <b>monto</b> y toca <b>Guardar</b>.','Así el Dashboard puede mostrarte cuánto has recuperado (retorno sobre inversión).'],'inversiones','Ir a Inversión'],
+ ['🤝','Deudas','Para controlar lo que debes y lo que te deben',
+  ['<b>Registrar deuda:</b> fecha, tipo (Por pagar o Por cobrar), persona o entidad, detalle, monto y fecha de vencimiento (opcional).','<b>Tabla de deudas:</b> monto, pagado, saldo, vencimiento y la casilla para abonar. Cuando se paga todo aparece «Saldada».'],
+  ['Elige <b>Por pagar</b> (tú debes) o <b>Por cobrar</b> (te deben).','Completa la persona, el detalle y el monto, y guarda.','Cuando haya un pago, escribe el monto en la fila y toca <b>+</b>: el saldo se actualiza solo.'],'deudas','Ir a Deudas'],
+ ['🏷️','Etiquetas','Para imprimir las etiquetas con código de barras',
+  ['<b>Ver categoría</b> y <b>Copias por producto</b>.','<b>Mostrar precio:</b> pone o quita el precio en la etiqueta.','<b>Marcar todos / Quitar todos</b> y casillas para elegir productos uno por uno.','<b>Descargar PDF</b> e <b>Imprimir</b>.','<b>Vista previa:</b> así saldrán tus etiquetas.'],
+  ['Elige la categoría o deja «Todas».','Marca los productos que quieras y define cuántas copias necesitas.','Revisa la vista previa.','Toca <b>Imprimir</b> o <b>Descargar PDF</b>. Cada etiqueta lleva el nombre de la tienda, el código de barras y el precio.'],'etiquetas','Ir a Etiquetas'],
+ ['💾','Respaldo y PDF','Para proteger tus datos y descargar reportes',
+  ['<b>Tus datos están protegidos:</b> se guardan solos en este dispositivo, en una Hoja de Google (opcional) y en un respaldo descargable. Muestra el estado y la fecha del último respaldo, con el botón Guardar ahora.','<b>Sincronizar varios dispositivos:</b> pega la URL y la clave de la Hoja de Google y toca Conectar (o Desconectar).','<b>Descargas:</b> reporte completo en PDF, todo en Excel y respaldo de datos (.json).','<b>Restaurar un respaldo:</b> elige el archivo .json que descargaste.'],
+  ['No hace falta guardar: todo se guarda solo cada vez que registras algo.','De vez en cuando, descarga el <b>respaldo (.json)</b> y guárdalo en un lugar seguro.','Si necesitas recuperar tus datos, usa <b>Restaurar un respaldo</b>.','Para ver o compartir tu información, baja el <b>PDF</b> o el <b>Excel</b>.'],'respaldo','Ir a Respaldo'],
+ ['⚙️','Listas','Para personalizar los desplegables y las categorías',
+  ['<b>Agregar categoría nueva:</b> escribe su nombre y sus listas separadas por coma (ej. Producto, Marca).','<b>Editar lista desplegable:</b> elige la lista, mira sus opciones (con × para quitarlas) y agrega nuevas separadas por coma.','<b>Agregar otra lista</b> a una categoría, <b>Quitar esta lista</b> o <b>Eliminar categoría</b> (no se puede si aún tiene productos).'],
+  ['Revisa las opciones que ya vienen de ejemplo.','Agrega las que te falten. También puedes hacerlo desde cualquier desplegable con <b>➕ Agregar nueva…</b>.','Si necesitas un tipo de producto nuevo, crea una categoría.'],'catalogos','Ir a Listas']];
+ const li=a=>a.map(x=>`<li>${x}</li>`).join('');
+ return `<div class='card'><h2>👋 Cómo empezar</h2><p style='margin:0'>Esta herramienta te ayuda a llevar el control de tu tienda sin cuentas complicadas. Solo debes <b>elegir de listas y escribir montos</b>: el sistema calcula todo lo demás. Abajo encuentras <b>cada sección</b> de la app: qué contiene y qué debes hacer.</p><p style='margin:8px 0 0;color:var(--mut)'>💾 Todo se guarda solo, en este dispositivo. Si conectas la Hoja de Google (pestaña Respaldo), también se comparte entre todos los dispositivos conectados.</p></div>
+ <div class='card'><h2>🧭 Orden recomendado</h2><ol style='margin:0;padding-left:20px'><li>Revisa tus <b>Listas</b> (solo la primera vez).</li><li>Registra tus <b>Productos</b>.</li><li>Imprime tus <b>Etiquetas</b>.</li><li>Cada vez que vendas, usa <b>Vendido</b> o <b>Ingresos</b>.</li><li>Cuando gastes, invites o debas algo, usa <b>Egresos</b>, <b>Inversión</b> o <b>Deudas</b>.</li><li>Revisa el <b>Dashboard</b>, la <b>Ganancia real</b> y los <b>Descuentos</b> para ver cómo vas.</li><li>De vez en cuando, descarga un <b>Respaldo</b>.</li></ol></div>
+ ${sec.map((s,i)=>`<div class='card step'><div class='num'>${i+1}</div><div><h3>${s[0]} ${s[1]}</h3><small>${s[2]}</small><div style='margin-top:8px'><div class='sp' style='font-weight:700'>Qué encuentras aquí</div><ul style='margin:4px 0 8px;padding-left:20px'>${li(s[3])}</ul><div class='sp' style='font-weight:700'>Lo que debes hacer</div><ol>${li(s[4])}</ol></div><p style='margin:8px 0 0'><button class='btn s' data-tab='${s[5]}'>${s[6]} →</button></p></div></div>`).join('')}
+ <div class='card'><h2>📚 Palabras clave</h2><ul><li><b>Ingresos:</b> el dinero que entra por tus ventas.</li><li><b>Egresos:</b> el dinero que gastas.</li><li><b>Ganancia:</b> ingresos − egresos.</li><li><b>Ganancia real:</b> lo vendido − el costo de lo vendido.</li><li><b>Inversión:</b> dinero que pones para empezar o crecer.</li><li><b>Margen:</b> qué parte de lo vendido es ganancia.</li><li><b>Retorno sobre inversión:</b> cuánto has ganado comparado con lo invertido.</li><li><b>Stock:</b> las unidades que te quedan de cada producto.</li><li><b>Descuento:</b> lo que rebajas del precio de lista al vender.</li><li><b>Retiro:</b> dinero que sacas de la ganancia real (pago personal o reinversión).</li></ul></div>
  <div class='card'><h2>✨ Consejos</h2><ul><li>Registra tus ventas el mismo día: toma menos de un minuto.</li><li>Revisa el Dashboard una vez por semana.</li><li>Si un producto baja a 2 unidades o menos, el Dashboard te lo cuenta en «Stock bajo».</li></ul></div>`},
 etiquetas(){
  return `<div class='card'><h2>🏷️ Etiquetas para imprimir</h2>
@@ -378,7 +420,7 @@ ingresos(){
  <label>Fecha<input name="fecha" type="date" value="${today()}" required></label>
  ${dd('concepto',S.listas.ing,'Concepto')}
  <label>Producto (opcional)<select id="ip" name="prod"><option value="">— ninguno —</option>${S.productos.map(p=>`<option value="${p.id}">${esc(p.cod)} · ${esc(p.nom)}${(p.det||p.marca)?' · '+esc([p.det,p.marca].filter(Boolean).join(' · ')):''}</option>`).join('')}</select></label>
- <label>Cantidad<input id="iq" name="cant" type="number" min="1" value="1"></label><label>Descuento (Bs) · opcional<input id="idc" name="desc" type="number" step="0.01" min="0" value="0"></label>${money('im')}
+ <label>Cantidad<input id="iq" name="cant" type="number" min="1" value="1"></label><label>Descuento en<select id="idt" name="dt"><option value="%">% (porcentaje)</option><option value="bs">Bs (monto)</option></select></label><label>Descuento · opcional<input id="idc" name="desc" type="number" step="0.01" min="0" value="0"></label>${money('im','Precio final (Bs)')}<div id="ihint" class="edn" style="grid-column:1/-1"></div>
  <button class="btn">Guardar</button></form></div>
  <div class="card"><h2>Ingresos <span class="tot good">${fmt(sum(S.ingresos,'monto'))}</span></h2>${tbl(['Fecha','Concepto','Producto','Cant.','Monto','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P),g=(+i.monto||0)-c;return `<tr><td>${i.fecha}</td><td>${esc(i.concepto)}</td><td>${i.prod?esc(pname(i.prod)):'—'}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class="${g>=0?'good':'bad'}">${fmt(g)}</td>${del('ingresos',i.id)}</tr>`}))}</div>`},
 egresos(){
@@ -408,15 +450,15 @@ deudas(){
  return `<tr><td>${d.fecha}</td><td class="${d.tipo==='Por pagar'?'bad':'good'}">${d.tipo}</td><td>${esc(d.persona)}</td><td>${esc(d.concepto)}</td><td>${fmt(d.monto)}</td><td>${fmt(d.pagado)}</td><td><b>${s<=0?'✔ Saldada':fmt(s)}</b></td><td>${d.vence||'—'}</td><td>${s>0?`<input id="ab${d.id}" type="number" step="0.01" min="0.01" style="width:90px;display:inline"> <button class="btn s" data-ab="${d.id}">+</button>`:''}</td>${del('deudas',d.id)}</tr>`}))}</div>`},
 
 vender(){
- return `<div class='card'><h2>📷 Vender con código de barras</h2>
+ return `<div class='card'><h2>📷 Vendido con código de barras</h2>
  <p style='margin:0 0 10px;color:var(--mut)'>Apunta la cámara al código de barras de la etiqueta: la venta se guarda sola, baja el stock y se separa el costo de la ganancia. También funciona con un lector de códigos USB o Bluetooth.</p>
  <div class='grid'><label>Cantidad por venta<input id='sq' type='number' min='1' value='1'></label>
  <label>Descuento para la próxima venta<input id='vd' type='number' min='0' step='0.01' value='0'></label>
  <label>Descuento en<select id='vdt'><option value='%'>% (porcentaje)</option><option value='bs'>Bs (monto)</option></select></label>
  <button class='btn' id='camb' data-act='camon'>📷 Abrir cámara</button></div>
  <div id='vcam' hidden><div class='vbox'><video id='scv' playsinline muted></video><div class='vline'></div></div><p style='margin:0'><button class='btn x s' data-act='camoff'>Cerrar cámara</button></p></div>
- <p id='vlast' class='msg'>${esc(SC.msg||'Listo para vender.')}</p><div id='vpic'>${vpic()}</div>
- <div class='grid' style='margin-top:10px'><label>¿Sin cámara? Escribe o escanea el código<input id='sm' placeholder='Ej. RO-001 y Enter' autocomplete='off' autocapitalize='characters'></label><button class='btn s' data-act='manual'>Vender</button></div></div>
+ <p id='vlast' class='msg'>${esc(SC.msg||'Listo para registrar lo vendido.')}</p><div id='vpic'>${vpic()}</div>
+ <div class='grid' style='margin-top:10px'><label>¿Sin cámara? Escribe o escanea el código<input id='sm' placeholder='Ej. RO-001 y Enter' autocomplete='off' autocapitalize='characters'></label><button class='btn s' data-act='manual'>Vendido</button></div></div>
  <div class='card'><h2>Ventas de hoy</h2><div id='vtoday'>${vtoday()}</div></div>`},
 ganancia(){
  const P=pmap(),T=gsum(S.ingresos,P),R=sum(RT(),'monto'),M=today().slice(0,7),GM=gsum(S.ingresos.filter(i=>(i.fecha||'').slice(0,7)===M),P);
@@ -439,7 +481,7 @@ descuentos(){
  const D=sd(l),Lt=l.reduce((t,i)=>t+ilista(i),0),DM=sd(l.filter(i=>(i.fecha||'').slice(0,7)===M)),nv=all.filter(i=>i.prod).length;
  const kp=(a,b,c)=>`<div class='kpi'><small>${a}</small><b class='${c||''}'>${b}</b></div>`;
  return `<div class='card'><h2>💸 Descuentos que dimos</h2>
- <p style='margin:0 0 10px;color:var(--mut)'>Cada vez que vendes por menos del precio de lista queda anotado aquí. En <b>Vender</b> escribe el descuento (en % o en Bs) antes de escanear; en <b>Ingresos</b> hay un campo «Descuento». También puedes editar una venta para agregarlo. La ganancia real ya viene con el descuento restado.</p>
+ <p style='margin:0 0 10px;color:var(--mut)'>Cada vez que vendes por menos del precio de lista queda anotado aquí. En <b>Vendido</b> escribe el descuento (en % o en Bs) antes de escanear; en <b>Ingresos</b> hay un campo «Descuento». También puedes editar una venta para agregarlo. La ganancia real ya viene con el descuento restado.</p>
  <div class='kpis' style='margin:0'>${kp('Descuento dado (acumulado)',fmt(D),D>0?'bad':'')}${kp('Descuento este mes',fmt(DM),DM>0?'bad':'')}${kp('Ventas con descuento',l.length+(nv?' de '+nv:''))}${kp('Descuento promedio',Lt?(D/Lt*100).toFixed(1)+'%':'—')}</div></div>
  <div class='card'><h2>Ventas con descuento</h2>${l.length?tbl(['Fecha','Producto','Precio de lista','Descuento','%','Cobrado','Ganancia',''],l.map(i=>{const g=(+i.monto||0)-icost(i,P);return `<tr><td>${i.fecha}</td><td>${i.prod?esc(pname(i.prod)):esc(i.concepto)}</td><td>${fmt(ilista(i))}</td><td class='bad'>${fmt(idesc(i))}</td><td>${dpct(i).toFixed(0)}%</td><td>${fmt(i.monto)}</td><td class='${g>=0?'good':'bad'}'>${fmt(g)}</td>${del('ingresos',i.id)}</tr>`})):`<div class='empty'>Todavía no registraste descuentos.</div>`}</div>`},
 catalogos(){
@@ -470,7 +512,12 @@ const ilista=i=>i.lista!=null?+i.lista:(+i.monto||0)+idesc(i);
 const dpct=i=>{const l=ilista(i);return l>0?idesc(i)/l*100:0};
 const dtxt=i=>idesc(i)>0?fmt(idesc(i))+' ('+dpct(i).toFixed(0)+'%)':'—';
 const eq=(a,b)=>Math.abs(a-b)<.005;
-function ingCalc(){const p=S.productos.find(x=>x.id===$('#ip').value);if(p)$('#im').value=Math.max(0,p.precio*(+$('#iq').value||1)-(+($('#idc')||{}).value||0)).toFixed(2)}
+function ingCalc(){const p=S.productos.find(x=>x.id===$('#ip').value),h=$('#ihint');
+ if(!p){if(h)h.textContent='';return}
+ const q=+$('#iq').value||1,base=p.precio*q,v=Math.max(0,+($('#idc')||{}).value||0),t=($('#idt')||{}).value||'%',
+ d=Math.min(base,t==='%'?base*Math.min(v,100)/100:v),fin=Math.max(0,base-d);
+ $('#im').value=fin.toFixed(2);
+ if(h)h.innerHTML=d>0?'Precio de lista: '+fmt(base)+' − descuento '+fmt(d)+(t==='%'?' ('+Math.min(v,100)+'%)':'')+' = <b>'+fmt(fin)+'</b>':'Precio de lista: <b>'+fmt(base)+'</b>'}
 const gsum=(a,Pm)=>{Pm=Pm||pmap();const v=sum(a,'monto'),c=a.reduce((t,i)=>t+icost(i,Pm),0);return{v,c,g:v-c}};
 const RT=()=>S.retiros||(S.retiros=[]);
 RT().forEach(r=>{if(r.tipo==='Pago a nosotras')r.tipo='Pago personal'});
@@ -522,7 +569,7 @@ async function sellP(p,q){
  S.ingresos.push(r);save();if(vd)vd.value=0;
  SC.msg='✔ '+p.cod+' · '+p.nom+' ×'+q+' — vendido '+fmt(r.monto)+(dsc>0?' (con descuento de '+fmt(dsc)+')':'')+' · ganancia '+fmt(r.monto-r.costo);
  beep(true);refreshV();return true}
-function refreshV(){const a=$('#vlast'),b=$('#vtoday'),c=$('#vpic');if(a)a.textContent=SC.msg||'Listo para vender.';if(b)b.innerHTML=vtoday();if(c)c.innerHTML=vpic()}
+function refreshV(){const a=$('#vlast'),b=$('#vtoday'),c=$('#vpic');if(a)a.textContent=SC.msg||'Listo para registrar lo vendido.';if(b)b.innerHTML=vtoday();if(c)c.innerHTML=vpic()}
 function vtoday(){
  const T=today(),P=pmap(),all=S.ingresos.filter(i=>i.fecha===T),G=gsum(all,P),l=all.filter(i=>i.prod).sort((a,b)=>(b.ts||0)-(a.ts||0));
  return `<div class='kpis'><div class='kpi'><small>Vendido hoy</small><b class='good'>${fmt(G.v)}</b></div><div class='kpi'><small>Costo de lo vendido</small><b>${fmt(G.c)}</b></div><div class='kpi'><small>Ganancia real hoy</small><b class='${G.g>=0?'good':'bad'}'>${fmt(G.g)}</b></div><div class='kpi'><small>Descuentos dados hoy</small><b>${fmt(all.reduce((t,i)=>t+idesc(i),0))}</b></div></div>`+
@@ -657,11 +704,11 @@ document.addEventListener('change',e=>{
  if(e.target.id==='lc'||e.target.id==='lp')drawL();
  if(e.target.id==='sc'){selL=e.target.value;render()}
  if(e.target.dataset.dd)sync();
- if(e.target.id==='ip'||e.target.id==='iq'||e.target.id==='idc')ingCalc()});
+ if(e.target.id==='ip'||e.target.id==='iq'||e.target.id==='idc'||e.target.id==='idt')ingCalc()});
 document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='q')$('#plist').innerHTML=prodTable(t.value);
  if(t.id==='ln')drawL();
- if(t.id==='idc')ingCalc();
+ if(t.id==='idc'||t.id==='iq')ingCalc();
  if(t.name==='precio')t.dataset.m=1;
  if(t.name==='costo'){const p=$('[name=precio]');if(p&&!p.dataset.m)p.value=(t.value*1.5).toFixed(2)}});
 document.addEventListener('submit',async e=>{
@@ -676,7 +723,7 @@ document.addEventListener('submit',async e=>{
   const p=S.productos.find(x=>x.id===f.prod),q=+f.cant||1,cn=res(f,'concepto',S.listas.ing);
   if(cn===null)return toast('Escribe el concepto nuevo o elige uno.');
   if(p){if(p.stock<q)return toast('Stock insuficiente ('+p.stock+' disponibles).');p.stock-=q;touch(p)}
-  const mo=+f.monto;let dsc=Math.max(0,+f.desc||0);if(p&&dsc===0&&mo<p.precio*q-.005)dsc=+(p.precio*q-mo).toFixed(2);
+  const mo=+f.monto;let dsc=Math.max(0,+f.desc||0);if(f.dt==='%')dsc=p?+(p.precio*q*Math.min(dsc,100)/100).toFixed(2):0;if(p&&dsc===0&&mo<p.precio*q-.005)dsc=+(p.precio*q-mo).toFixed(2);
   S.ingresos.push({id:uid(),fecha:f.fecha,concepto:cn,prod:f.prod||'',cant:p?q:0,monto:mo,lista:+(mo+dsc).toFixed(2),desc:dsc,costo:p?+(p.costo*q).toFixed(2):0,ts:Date.now()});toast(dsc>0?'Ingreso registrado (con descuento de '+fmt(dsc)+')':'Ingreso registrado')}
  else if(k==='ret'){const mo=+f.monto,disp=gsum(S.ingresos).g-sum(RT(),'monto');
   if(mo>disp+.005&&!await ask('Vas a retirar '+fmt(mo)+' pero solo hay '+fmt(disp)+' de ganancia real disponible. ¿Registrar igual?'))return;
