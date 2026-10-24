@@ -345,7 +345,7 @@ guia(){
   ['Elige el período que quieres revisar.','Lee la frase del resumen y las tarjetas.','Mira los gráficos para entender de dónde viene tu dinero y en qué se va.','Revisa «Stock bajo» para saber qué productos debes reponer.'],'resumen','Ir al Dashboard'],
  ['🛍️','Productos','Para registrar y controlar lo que vendes',
   ['<b>Nuevo producto:</b> categoría, código (sale solo, ej. RO-001), producto y detalle (desplegables), «Lleva marca», costo, precio de venta, stock inicial y foto.','<b>Inventario:</b> tabla con foto, código, producto, categoría, detalle, costo, precio, margen y stock, con buscador y botones Editar y Eliminar.'],
-  ['Elige la <b>categoría</b>: el código aparece solo.','Elige el producto y su detalle en los desplegables.','Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.','Escribe el <b>costo</b>: el precio se sugiere solo (+50%). Puedes cambiarlo.','Indica el <b>stock</b> y, si quieres, toma una foto con 📷 o elígela de la galería.','Toca <b>Guardar producto</b>. Para encontrar uno, escribe en el buscador; toca su foto para verla más grande.'],'productos','Ir a Productos'],
+  ['Elige la <b>categoría</b>: el código aparece solo.','Elige el producto y su detalle en los desplegables.','Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.','Escribe el <b>costo</b>: en <b>Cómo poner el precio de venta</b> elige «Agregar 50% al costo» (se calcula solo) o «Ponerlo manualmente».','Indica el <b>stock</b> y, si quieres, toma una foto con 📷 o elígela de la galería.','Toca <b>Guardar producto</b>. Para encontrar uno, escribe en el buscador; toca su foto para verla más grande.'],'productos','Ir a Productos'],
  ['📷','Vendido','Para registrar lo vendido con la cámara o con un lector',
   ['<b>Cantidad por venta:</b> cuántas unidades se descuentan en cada escaneo.','<b>Descuento para la próxima venta:</b> en % o en Bs; se aplica al siguiente producto que escanees.','<b>Abrir cámara:</b> escanea el código de barras de la etiqueta (también funciona con un lector USB o Bluetooth).','<b>Escribir el código:</b> si no tienes cámara, escribe el código (ej. RO-001) y toca Vendido.','<b>Ventas de hoy:</b> lista de lo vendido hoy, con Editar y Eliminar.'],
   ['Imprime las etiquetas desde la pestaña Etiquetas.','Define la cantidad y, si hay, el descuento.','Toca <b>Abrir cámara</b> y apunta al código (o escríbelo).','La venta se guarda sola: baja el stock y se separa el <b>costo</b> de la <b>ganancia</b>.','Si te equivocas, usa <b>Editar</b> o <b>Eliminar</b> en «Ventas de hoy»: el stock se devuelve.'],'vender','Ir a Vendido'],
@@ -408,7 +408,8 @@ productos(){
  <label class='ck'><input type='checkbox' id='hb' name='hasb'> Lleva marca</label>
  <label id='bw' hidden>Marca<select name='marca'>${opts(B)}</select></label>
  <label>Costo (Bs)<input name="costo" type="number" step="0.01" min="0" required></label>
- <label>Precio venta (Bs) · sugerido +50%<input name="precio" type="number" step="0.01" min="0" required></label>
+ <label>Cómo poner el precio de venta<select name="pmode"><option value="auto">Agregar 50% al costo (automático)</option><option value="manual">Ponerlo manualmente</option></select></label>
+ <label>Precio venta (Bs)<input name="precio" type="number" step="0.01" min="0" required readonly placeholder="Se calcula con el costo"></label>
  <label>Stock inicial<input name="stock" type="number" min="0" value="0"></label>
  <label style="grid-column:1/-1">Descripción del producto (opcional)<textarea name="desc" rows="2" placeholder="Ej: material, talla, color, detalles, cuidados…"></textarea></label>
  <div class="frow"><small>Foto del producto (opcional)</small><label class="fl">📷 Tomar foto<input type="file" id="pfoto" accept="image/*" capture="environment" hidden></label><label class="fl g">🖼️ Galería<input type="file" id="pfoto2" accept="image/*" hidden></label><span id="pprev">${PF?`<img src="${PF}" alt="">`:''}</span></div>
@@ -710,8 +711,8 @@ document.addEventListener('input',e=>{const t=e.target;
  if(t.id==='q')$('#plist').innerHTML=prodTable(t.value);
  if(t.id==='ln')drawL();
  if(t.id==='idc'||t.id==='iq')ingCalc();
- if(t.name==='precio')t.dataset.m=1;
- if(t.name==='costo'){const p=$('[name=precio]');if(p&&!p.dataset.m)p.value=(t.value*1.5).toFixed(2)}});
+ if((t.name==='costo'||t.name==='pmode')&&t.form&&t.form.pmode){const f=t.form,p=f.precio,auto=f.pmode.value==='auto';p.readOnly=auto;p.placeholder=auto?'Se calcula con el costo':'Escribe el precio';
+  if(auto)p.value=f.costo.value!==''?(f.costo.value*1.5).toFixed(2):'';else if(t.name==='pmode')p.focus()}});
 document.addEventListener('submit',async e=>{
  e.preventDefault();
  const f=Object.fromEntries(new FormData(e.target)),k=e.target.dataset.f;
