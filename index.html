@@ -36,6 +36,11 @@ th,td{padding:8px;border-bottom:1px solid var(--bd);text-align:left;white-space:
 @media (prefers-color-scheme:dark){:root:not([data-theme='light']){--bg:#1b1730;--card:#26203f;--tx:#f5eefc;--mut:#b5acd6;--bd:#3b3360;--ac:#f08fb2;--acx:#1b1730;--good:#5fd4a4;--bad:#ff8aa0;--bgi:none}}
 :root[data-theme='dark']{--bg:#1b1730;--card:#26203f;--tx:#f5eefc;--mut:#b5acd6;--bd:#3b3360;--ac:#f08fb2;--acx:#1b1730;--good:#5fd4a4;--bad:#ff8aa0;--bgi:none}
 [hidden]{display:none!important}
+.vmh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.vmh h2{margin:0}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:99px;overflow:hidden;background:var(--bg)}
+.seg button{border:0;background:none;color:var(--tx);padding:8px 16px;font:inherit;cursor:pointer;position:relative;overflow:hidden}
+.seg button.on{background:linear-gradient(135deg,#f08fb2,#b7a3ee);color:#fff;font-weight:700}
+.cv.vm{height:300px}.vmn{margin:10px 0 0;font-size:14px;color:var(--mut)}.vmn b{color:var(--tx)}
 textarea{resize:vertical;width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
 body{font-family:'Nunito',system-ui,-apple-system,sans-serif;background-color:var(--bg);background-image:var(--bgi);background-attachment:fixed}
 .hd{text-align:center;padding:18px 16px 6px}.fay{font:700 58px/1 'Dancing Script','Brush Script MT',cursive;color:var(--tx)}
@@ -308,7 +313,7 @@ function prodTable(q){
   return `<tr><td>${fth(p.id)}</td><td><b>${esc(p.cod)}</b></td><td>${esc(p.nom)}</td><td>${esc(p.cat)}</td><td>${esc([p.det||p.attr,p.marca].filter(Boolean).join(' · '))}</td><td style="white-space:normal;min-width:140px;max-width:260px;color:var(--mut)">${esc(p.desc||'')}</td><td>${fmt(p.costo)}</td><td>${fmt(p.precio)}</td><td class="${m>=0?'good':'bad'}">${m.toFixed(0)}%</td><td>${p.stock}</td><td class="r"><button class="btn s" data-vp="${p.id}">🛒 Vender</button> <button class="btn s" data-edit="productos:${p.id}">Editar</button> <button class="btn x s" data-del="productos:${p.id}">Eliminar</button></td></tr>`}))}
 const money=(n,l)=>`<label>${l||'Monto (Bs)'}<input name="monto" id="${n||''}" type="number" step="0.01" min="0.01" required></label>`;
 const PER={mes:'este mes','30d':'los últimos 30 días','90d':'los últimos 90 días',anio:'este año',todo:'todo el tiempo'};
-let dper='mes',demo=false,CH=[],DD=null,lnot=new Set();
+let dper='mes',demo=false,CH=[],DD=null,lnot=new Set(),vgran='mes',VC=null;
 function demoData(){
  const P=[['RO-001','Vestidos','Ropa',35,80,''],['RO-002','Poleras','Ropa',20,45,''],['PR-001','Perfume','Productos de belleza',60,130,'Yanbal'],['PR-002','Labial','Productos de belleza',12,30,'Esika'],['CA-001','Cartera','Carteras',70,160,''],['JO-001','Collar','Joyería',15,40,''],['ZA-001','Sandalias','Zapatos',40,95,''],['PR-003','Crema','Productos de cuidado personal',25,55,'Natura']];
  const prods=P.map((p,i)=>({id:'d'+i,cod:p[0],nom:p[1],cat:p[2],costo:p[3],precio:p[4],marca:p[5],stock:1+i%5}));
@@ -340,7 +345,7 @@ function dash(){
  const mar=grp(IP,x=>P[x.prod].marca||'Sin marca',x=>+x.monto);
  const eg=grp(E,x=>x.concepto,x=>+x.monto);
  const tp=Object.entries(grp(IP,x=>P[x.prod].cod+' '+P[x.prod].nom,x=>+x.cant||1)).sort((x,y)=>y[1]-x[1]).slice(0,6);
- DD={ks,mi,me,cum,cat,mar,eg,tp};
+ DD={ks,mi,me,cum,cat,mar,eg,tp,D};
  const sl=a=>sum(a,'monto')-sum(a,'pagado'),invT=sum(D.inversiones,'monto'),ganT=sum(D.ingresos,'monto')-sum(D.egresos,'monto');
  const k=(l,v,c,x)=>`<div class='kpi'><small>${l}</small><b class='${c||''}'>${v}</b>${x?'<br>'+x:''}</div>`;
  const box=(t,id,has)=>`<div class='card'><h2>${t}</h2>${has?`<div class='cv'><canvas id='${id}'></canvas></div>`:`<div class='empty'>Sin datos en este período.</div>`}</div>`;
@@ -348,9 +353,54 @@ function dash(){
  return `${demo?`<div class='demo'>✨ Estás viendo datos de EJEMPLO. Nada de esto se guarda en tu negocio.</div>`:''}
  <div class='card'><div class='grid'><label>Período<select id='dp'>${Object.entries(PER).map(([a,v])=>`<option value='${a}' ${a===dper?'selected':''}>${v[0].toUpperCase()+v.slice(1)}</option>`).join('')}</select></label><button class='btn x s' data-demo='1' style='color:var(--ac)'>${demo?'Volver a mis datos':'Ver con datos de ejemplo'}</button></div><p class='msg'>${msg}</p></div>
  <div class='kpis'>${k('Ventas',fmt(ing),'good',dl(ing,pi))}${k('Gastos',fmt(egr),'bad')}${k('Ganancia',fmt(gan),gan>=0?'good':'bad',dl(gan,pg))}${k('Ganancia real (venta − costo)',fmt(GR.g),GR.g>=0?'good':'bad','<small>Costo de lo vendido: '+fmt(GR.c)+'</small>')}${k('Ganancia real disponible',fmt(DISP),DISP>=0?'good':'bad','<small>acumulada − retiros</small>')}${k('Descuentos dados',fmt(DS),DS>0?'bad':'','<small>'+DN+' venta(s) con descuento</small>')}${k('Margen',ing?(gan/ing*100).toFixed(0)+'%':'—')}${k('Venta promedio',I.length?fmt(ing/I.length):'—')}${k('Total invertido',fmt(invT))}${k('Retorno sobre inversión',invT?(ganT/invT*100).toFixed(0)+'%':'—',ganT>=0?'good':'bad')}${k('Por pagar',fmt(sl(D.deudas.filter(d=>d.tipo==='Por pagar'))),'bad')}${k('Por cobrar',fmt(sl(D.deudas.filter(d=>d.tipo==='Por cobrar'))),'good')}${k('Valor del inventario',fmt(D.productos.reduce((t,p)=>t+p.costo*p.stock,0)))}${k('Stock bajo (2 o menos)',D.productos.filter(p=>p.stock<=2).length+' productos')}</div>
+ ${ventasBox(D)}
  <div class='g2'>${box('Ingresos vs egresos','c1',ks.length)}${box('Ganancia acumulada','c2',ks.length)}${box('Ventas por categoría','c3',Object.keys(cat).length)}${box('Ventas por marca','c4',Object.keys(mar).length)}${box('Productos más vendidos','c5',tp.length)}${box('En qué gastas','c6',Object.keys(eg).length)}</div>`}
+const VG={sem:{u:'semana',art:'La semana',mej:'Mejor semana'},mes:{u:'mes',art:'El mes',mej:'Mejor mes'},anio:{u:'año',art:'El año',mej:'Mejor año'}};
+function ventasBox(D){
+ const has=(D.ingresos||[]).some(x=>x.fecha);
+ if(!has)return `<div class='card'><h2>📈 Movimiento de ventas</h2><div class='empty'>Aún no hay ventas registradas. Cuando registres tu primera venta, aquí verás cómo se mueve por semanas, meses y años.</div></div>`;
+ const b=(k,t)=>`<button type='button' data-vg='${k}' class='${k===vgran?'on':''}'>${t}</button>`;
+ return `<div class='card'><div class='vmh'><h2>📈 Movimiento de ventas</h2><div class='seg'>${b('sem','Semanas')}${b('mes','Meses')}${b('anio','Años')}</div></div><div class='cv vm'><canvas id='cv-vm'></canvas></div><p class='vmn' id='vm-sum'></p></div>`}
+function ventasData(){
+ const I=((DD&&DD.D&&DD.D.ingresos)||[]).filter(x=>x.fecha);
+ const pd=f=>{const q=f.split('-');return new Date(+q[0],+q[1]-1,+q[2])};
+ const MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+ const n0=new Date(),t0=new Date(n0.getFullYear(),n0.getMonth(),n0.getDate());
+ const mon=d=>{const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
+ const keys=[],lab={};let key;
+ if(vgran==='sem'){
+  const m0=mon(t0);
+  for(let i=11;i>=0;i--){const x=new Date(m0);x.setDate(x.getDate()-7*i);const k=iso(x);keys.push(k);lab[k]=x.getDate()+' '+MN[x.getMonth()]}
+  key=f=>iso(mon(pd(f)))}
+ else if(vgran==='mes'){
+  for(let i=11;i>=0;i--){const x=new Date(t0.getFullYear(),t0.getMonth()-i,1),k=iso(x).slice(0,7);keys.push(k);lab[k]=MN[x.getMonth()]+' '+String(x.getFullYear()).slice(2)}
+  key=f=>f.slice(0,7)}
+ else{
+  const ys=I.map(x=>+x.fecha.slice(0,4)),y0=Math.min(t0.getFullYear()-2,...(ys.length?ys:[t0.getFullYear()]));
+  for(let y=y0;y<=t0.getFullYear();y++){keys.push(String(y));lab[String(y)]=String(y)}
+  key=f=>f.slice(0,4)}
+ const v={},n={};keys.forEach(k=>{v[k]=0;n[k]=0});
+ I.forEach(x=>{const k=key(x.fecha);if(k in v){v[k]+=+x.monto||0;n[k]++}});
+ return{keys,labels:keys.map(k=>lab[k]),v:keys.map(k=>+v[k].toFixed(2)),n:keys.map(k=>n[k])}}
+function drawVentas(){
+ const el=document.getElementById('cv-vm');if(!el)return;
+ if(VC){CH=CH.filter(c=>c!==VC);VC.destroy();VC=null}
+ const d=ventasData(),g=VG[vgran],L=d.v.length,tot=d.v.reduce((a,x)=>a+x,0);
+ VC=new Chart(el,{type:'bar',data:{labels:d.labels,datasets:[
+  {type:'line',label:'N.º de ventas',data:d.n,yAxisID:'y1',borderColor:'#6aa8f0',backgroundColor:'#6aa8f0',pointRadius:4,pointHoverRadius:6,tension:.3,order:0},
+  {type:'bar',label:'Ventas (Bs)',data:d.v,yAxisID:'y',backgroundColor:'#f08fb2',borderRadius:6,order:1}]},
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+   scales:{y:{beginAtZero:true,position:'left',ticks:{callback:x=>'Bs '+x}},y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},ticks:{precision:0}}},
+   plugins:{tooltip:{callbacks:{label:c=>c.dataset.yAxisID==='y1'?' '+c.parsed.y+' venta'+(c.parsed.y===1?'':'s'):' Ventas: '+fmt(c.parsed.y)}}}}});
+ CH.push(VC);
+ const mx=Math.max(...d.v),bi=d.v.indexOf(mx),last=d.v[L-1],prev=d.v[L-2];
+ let t=`Total mostrado: <b>${fmt(tot)}</b> · Promedio por ${g.u}: <b>${fmt(tot/L)}</b>`;
+ if(mx>0)t+=` · ${g.mej}: <b>${esc(d.labels[bi])}</b> (${fmt(mx)})`;
+ if(prev>0)t+=` · ${g.art} actual va <b class='${last>=prev?'good':'bad'}'>${last>=prev?'▲':'▼'} ${Math.abs((last-prev)/prev*100).toFixed(0)}%</b> frente al anterior.`;
+ const s=$('#vm-sum');if(s)s.innerHTML=t}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-vg]');if(!b)return;vgran=b.dataset.vg;document.querySelectorAll('[data-vg]').forEach(x=>x.classList.toggle('on',x===b));drawVentas()});
 function charts(){
- CH.forEach(c=>c.destroy());CH=[];
+ CH.forEach(c=>c.destroy());CH=[];VC=null;
  if(!DD)return;
  if(typeof Chart==='undefined'){$('#app').insertAdjacentHTML('beforeend','<div class="empty">No se pudieron cargar los gráficos. Revisa tu conexión a internet.</div>');return}
  Chart.defaults.color=getComputedStyle(document.documentElement).getPropertyValue('--tx').trim();
@@ -361,7 +411,7 @@ function charts(){
  mk('c3','doughnut',Object.keys(cat),[{data:v(cat),backgroundColor:C}]);
  mk('c4','doughnut',Object.keys(mar),[{data:v(mar),backgroundColor:C}]);
  mk('c5','bar',tp.map(x=>x[0]),[{label:'Unidades vendidas',data:tp.map(x=>x[1]),backgroundColor:C[2]}],{indexAxis:'y'});
- mk('c6','doughnut',Object.keys(eg),[{data:v(eg),backgroundColor:C}])}
+ mk('c6','doughnut',Object.keys(eg),[{data:v(eg),backgroundColor:C}]);drawVentas()}
 function drawL(){
  const c=$('#lc').value,n=Math.max(1,+$('#ln').value||1),pr=$('#lp').checked,det=p=>esc([p.det||p.attr,p.marca].filter(Boolean).join(' · '));
  const L=S.productos.filter(p=>!c||p.cat===c);
