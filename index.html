@@ -240,6 +240,11 @@ tbody tr:hover{background:rgba(143,211,255,.2)}
 #lvl .bx{box-shadow:0 8px 0 #c4117a,0 0 0 6px #9fd8ff,0 20px 50px rgba(79,179,240,.5)!important}
 #lvl .nv{background-image:linear-gradient(90deg,#ff4fa3 0%,#ff86c8 35%,#b58be8 50%,#6fc3f7 70%,#3fa9ee 100%)!important}
 .lb{background:linear-gradient(150deg,rgba(255,247,250,.93) 0%,rgba(253,228,241,.9) 38%,rgba(238,232,252,.9) 52%,rgba(222,241,255,.93) 100%) padding-box,linear-gradient(135deg,#f06b9b 0%,#f58ab4 30%,#b58be8 50%,#7cc4f5 70%,#5aaef0 100%) border-box!important}
+.rwrap{position:relative;width:100%;max-width:360px;margin:12px auto}.rwrap canvas{width:100%;height:auto;display:block;border-radius:50%;box-shadow:0 8px 24px rgba(240,107,155,.35)}
+.rptr{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:30px solid #ff4fa3;z-index:2;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.rres{text-align:center;font-size:19px;font-weight:700;min-height:30px;margin-top:6px}
+.mb.bolsa{max-width:580px;position:relative;text-align:left}.mb.bolsa h2{margin:0 0 6px;padding-right:36px}.mb.bolsa h3{margin:14px 0 6px}.fx2{position:absolute;top:10px;right:10px;border:0;background:var(--bd);color:var(--tx);border-radius:99px;width:32px;height:32px;cursor:pointer;font-size:16px}
+.cf2{position:fixed;pointer-events:none;z-index:60;opacity:1;transition:transform 1.6s cubic-bezier(.2,.7,.3,1),opacity 1.6s ease-in}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Mr+Dafoe&family=Nunito:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -277,7 +282,7 @@ S.listas=Object.assign(JSON.parse(JSON.stringify(DEF.listas)),S.listas||{});
 const save=()=>{S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}queueCloud()};
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2600)}
 const EG=['Compra de mercadería','Transporte','Publicidad','Servicios','Alquiler','Otros'];
-const TABS=[['guia','📖 Guía'],['resumen','📊 Dashboard'],['productos','Productos'],['vender','📷 Vendido'],['ingresos','Ingresos'],['ganancia','💎 Ganancia real'],['egresos','Egresos'],['inversiones','Inversión'],['deudas','Deudas'],['etiquetas','🏷️ Etiquetas'],['respaldo','💾 Respaldo y PDF'],['catalogos','⚙️ Listas']];
+const TABS=[['guia','📖 Guía'],['resumen','📊 Dashboard'],['productos','Productos'],['vender','📷 Vendido'],['clientas','👛 Clientas'],['ruleta','🎡 Ruleta'],['ingresos','Ingresos'],['ganancia','💎 Ganancia real'],['egresos','Egresos'],['inversiones','Inversión'],['deudas','Deudas'],['etiquetas','🏷️ Etiquetas'],['respaldo','💾 Respaldo y PDF'],['catalogos','⚙️ Listas']];
 let tab=S.productos.length?'resumen':'guia',selL='c|'+Object.keys(S.cats)[0]+'|0';
 const getL=ref=>{const p=ref.split('|');
  if(p[0]==='g'){const n={ing:'Ingresos › Concepto',egr:'Egresos › Concepto',inv:'Inversión › Concepto',deu:'Deudas › Detalle',per:'Deudas › Persona / entidad'}[p[1]];return{arr:S.listas[p[1]],name:n}}
@@ -300,7 +305,7 @@ function prodTable(q){
  const l=S.productos.filter(p=>[p.cod,p.nom,p.cat,p.det,p.attr,p.desc].join(' ').toLowerCase().includes(q));
  return tbl(['Foto','Código','Producto','Categoría','Detalle','Descripción','Costo','Precio','Margen','Stock',''],l.map(p=>{
   const m=p.precio?((p.precio-p.costo)/p.precio*100):0;
-  return `<tr><td>${fth(p.id)}</td><td><b>${esc(p.cod)}</b></td><td>${esc(p.nom)}</td><td>${esc(p.cat)}</td><td>${esc([p.det||p.attr,p.marca].filter(Boolean).join(' · '))}</td><td style="white-space:normal;min-width:140px;max-width:260px;color:var(--mut)">${esc(p.desc||'')}</td><td>${fmt(p.costo)}</td><td>${fmt(p.precio)}</td><td class="${m>=0?'good':'bad'}">${m.toFixed(0)}%</td><td>${p.stock}</td>${del('productos',p.id)}</tr>`}))}
+  return `<tr><td>${fth(p.id)}</td><td><b>${esc(p.cod)}</b></td><td>${esc(p.nom)}</td><td>${esc(p.cat)}</td><td>${esc([p.det||p.attr,p.marca].filter(Boolean).join(' · '))}</td><td style="white-space:normal;min-width:140px;max-width:260px;color:var(--mut)">${esc(p.desc||'')}</td><td>${fmt(p.costo)}</td><td>${fmt(p.precio)}</td><td class="${m>=0?'good':'bad'}">${m.toFixed(0)}%</td><td>${p.stock}</td><td class="r"><button class="btn s" data-vp="${p.id}">🛒 Vender</button> <button class="btn s" data-edit="productos:${p.id}">Editar</button> <button class="btn x s" data-del="productos:${p.id}">Eliminar</button></td></tr>`}))}
 const money=(n,l)=>`<label>${l||'Monto (Bs)'}<input name="monto" id="${n||''}" type="number" step="0.01" min="0.01" required></label>`;
 const PER={mes:'este mes','30d':'los últimos 30 días','90d':'los últimos 90 días',anio:'este año',todo:'todo el tiempo'};
 let dper='mes',demo=false,CH=[],DD=null,lnot=new Set();
@@ -372,7 +377,8 @@ function queueCloud(){if(!CL()){cst='local';setSt();return}cDirty=true;cst='pend
 async function api(b){const r=await fetch(CFG.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({key:CFG.key},b))});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');return j}
 function mergeS(L,R){const M=JSON.parse(JSON.stringify(R));
  M.borr=Object.assign({},R.borr||{},L.borr||{});
- ['productos','ingresos','egresos','inversiones','deudas','retiros'].forEach(k=>{M[k]=M[k]||[];const ix=new Map(M[k].map((x,i)=>[x.id,i]));(L[k]||[]).forEach(x=>{if(!ix.has(x.id))M[k].push(x);else{const i=ix.get(x.id);if((x.mod||0)>(M[k][i].mod||0))M[k][i]=x}});M[k]=M[k].filter(x=>!M.borr[x.id])});
+ ['productos','ingresos','egresos','inversiones','deudas','retiros','clientas','premios'].forEach(k=>{M[k]=M[k]||[];const ix=new Map(M[k].map((x,i)=>[x.id,i]));(L[k]||[]).forEach(x=>{if(!ix.has(x.id))M[k].push(x);else{const i=ix.get(x.id);if((x.mod||0)>(M[k][i].mod||0))M[k][i]=x}});M[k]=M[k].filter(x=>!M.borr[x.id])});
+ if(L.ruleta&&(!M.ruleta||(L.ruleta.mod||0)>(M.ruleta.mod||0)))M.ruleta=L.ruleta;
  Object.keys(L.cats||{}).forEach(c=>{if(!M.cats[c])M.cats[c]=L.cats[c]});
  M.listas=Object.assign(JSON.parse(JSON.stringify(DEF.listas)),M.listas||{});
  Object.keys(L.listas||{}).forEach(k=>{M.listas[k]=[...new Set([...(M.listas[k]||[]),...L.listas[k]])]});return M}
@@ -480,11 +486,14 @@ function xlsReport(){
  const dt=a=>[...a].sort((x,z)=>(z.fecha||'').localeCompare(x.fecha||''));
  add('Resumen',['Concepto','Monto (Bs)'],[['Ingresos',ing],['Egresos',egr],['Ganancia (ingresos - egresos)',ing-egr],['Costo de lo vendido',GT.c],['Ganancia real (ventas - costo)',GT.g],['Retiros (pagos y reinversión)',rt],['Ganancia real disponible',GT.g-rt],['Descuentos dados',S.ingresos.reduce((t,i)=>t+idesc(i),0)],['Total invertido',inv],['Deudas por pagar',sl('Por pagar')],['Por cobrar',sl('Por cobrar')],['Valor del inventario (costo)',S.productos.reduce((t,p)=>t+p.costo*p.stock,0)]],[34,16]);
  add('Productos',['Código','Producto','Categoría','Detalle','Descripción','Marca','Costo','Precio','Margen %','Stock'],S.productos.map(p=>[p.cod,p.nom,p.cat,p.det||p.attr||'',p.desc||'',p.marca||'',n(p.costo),n(p.precio),p.precio?Math.round((p.precio-p.costo)/p.precio*100):0,n(p.stock)]),[12,18,26,22,30,12,10,10,10,8]);
- add('Ingresos',['Fecha','Concepto','Producto','Cantidad','Precio de lista','Descuento','Monto cobrado','Costo','Ganancia real'],dt(S.ingresos).map(i=>{const p=S.productos.find(x=>x.id===i.prod),c=icost(i,PM);return[i.fecha,i.concepto,p?p.cod+' '+p.nom:'',n(i.cant),ilista(i),idesc(i),n(i.monto),c,n(i.monto)-c]}).concat([['','TOTAL','','',S.ingresos.reduce((t,i)=>t+ilista(i),0),S.ingresos.reduce((t,i)=>t+idesc(i),0),ing,GT.c,GT.g]]),[12,26,28,10,14,12,14,12,14]);
+ add('Ingresos',['Fecha','Concepto','Producto','Cantidad','Precio de lista','Descuento','Monto cobrado','Costo','Ganancia real','Clienta'],dt(S.ingresos).map(i=>{const p=S.productos.find(x=>x.id===i.prod),c=icost(i,PM);return[i.fecha,i.concepto,p?p.cod+' '+p.nom:'',n(i.cant),ilista(i),idesc(i),n(i.monto),c,n(i.monto)-c,cliName(i.cli)]}).concat([['','TOTAL','','',S.ingresos.reduce((t,i)=>t+ilista(i),0),S.ingresos.reduce((t,i)=>t+idesc(i),0),ing,GT.c,GT.g,'']]),[12,26,28,10,14,12,14,12,14,18]);
  add('Egresos',['Fecha','Concepto','Monto'],dt(S.egresos).map(i=>[i.fecha,i.concepto,n(i.monto)]).concat([['','TOTAL',egr]]),[12,30,12]);
  add('Inversiones',['Fecha','Concepto','Monto'],dt(S.inversiones).map(i=>[i.fecha,i.concepto,n(i.monto)]).concat([['','TOTAL',inv]]),[12,30,12]);
  add('Deudas',['Fecha','Tipo','Persona','Detalle','Monto','Pagado','Saldo','Vence'],S.deudas.map(d=>[d.fecha,d.tipo,d.persona,d.concepto,n(d.monto),n(d.pagado),n(d.monto)-n(d.pagado),d.vence||'']),[12,12,20,22,12,12,12,12]);
  add('Retiros',['Fecha','Tipo','Monto','Nota'],dt(RT()).map(r=>[r.fecha,r.tipo,n(r.monto),r.nota||'']).concat([['','TOTAL',rt,'']]),[12,20,12,30]);
+ const cs=CLI().map(c=>({c,s:cliStat(c)}));
+ add('Clientas',['Nombre','Teléfono','Nota','Compras','Total comprado','Descuentos recibidos','Giros disponibles','Premios pendientes'],cs.map(({c,s})=>[c.nombre,c.tel||'',c.nota||'',s.n,s.tot,s.desc,s.giros,s.pend.length]),[22,16,28,10,14,16,14,16]);
+ add('Premios',['Fecha','Clienta','Premio','Estado'],PRZ().map(p=>[p.fecha,cliName(p.cli),p.txt,p.tipo==='nada'?'Sin premio':p.usado?(p.tipo==='regalo'?'Entregado':'Usado'):'Pendiente']),[12,22,30,14]);
  saveFile('fay-store-datos-'+today()+'.xlsx',X.write(wb,{bookType:'xlsx',type:'array'}))}
 const ACT={now(){save();clearTimeout(cTm);if(CL())pushCloud();toast(CL()?'Guardando en la nube…':'Guardado en este dispositivo')},
  bk(){S.lastBk=today();save();saveFile('fay-store-respaldo-'+today()+'.json',JSON.stringify(Object.assign({},S,{_fotos:FOT}),null,1))},pdf:pdfReport,lpdf:pdfLabels,xls:xlsReport,
@@ -513,11 +522,17 @@ guia(){
   ['<b>Período:</b> este mes, últimos 30 o 90 días, este año o todo el tiempo.','<b>Ver con datos de ejemplo:</b> muestra datos inventados para practicar; no se guarda nada.','<b>Resumen en una frase:</b> cuánto vendiste, cuánto gastaste y cuál es tu ganancia, comparado con el período anterior.','<b>Tarjetas:</b> Ventas, Gastos, Ganancia, Ganancia real, Ganancia real disponible, Descuentos dados, Margen, Venta promedio, Total invertido, Retorno sobre inversión, Por pagar, Por cobrar, Valor del inventario y Stock bajo (productos con 2 unidades o menos).','<b>Gráficos:</b> Ingresos vs egresos, Ganancia acumulada, Ventas por categoría, Ventas por marca, Productos más vendidos y En qué gastas. Pasa el dedo o el mouse sobre ellos para ver los montos.'],
   ['Elige el período que quieres revisar.','Lee la frase del resumen y las tarjetas.','Mira los gráficos para entender de dónde viene tu dinero y en qué se va.','Revisa «Stock bajo» para saber qué productos debes reponer.'],'resumen','Ir al Dashboard'],
  ['🛍️','Productos','Para registrar y controlar lo que vendes',
-  ['<b>Nuevo producto:</b> categoría, código (sale solo, ej. RO-001), producto y detalle (desplegables), «Lleva marca», costo, precio de venta, stock inicial y foto.','<b>Inventario:</b> tabla con foto, código, producto, categoría, detalle, costo, precio, margen y stock, con buscador y botones Editar y Eliminar.'],
+  ['<b>Nuevo producto:</b> categoría, código (sale solo, ej. RO-001), producto y detalle (desplegables), «Lleva marca», costo, precio de venta, stock inicial y foto.','<b>Venta rápida (opcional):</b> elige a la clienta y toca 🛒 Vender en el producto: la compra se guarda en su bolsita y suma a sus giros de ruleta.','<b>Inventario:</b> tabla con foto, código, producto, categoría, detalle, costo, precio, margen y stock, con buscador y botones Editar y Eliminar.'],
   ['Elige la <b>categoría</b>: el código aparece solo.','Elige el producto y su detalle en los desplegables.','Si es de marca, activa <b>Lleva marca</b> y elige Yanbal, Cyzone, Esika, Natura o L’BEL.','Escribe el <b>costo</b>: elige en <b>Precio de venta</b> si quieres <b>+50%</b> sobre el costo, <b>otro porcentaje</b> (lo escribes y el precio real se calcula solo) o escribirlo a mano.','Indica el <b>stock</b> y, si quieres, toma una foto con 📷 o elígela de la galería.','Toca <b>Guardar producto</b>. Para encontrar uno, escribe en el buscador; toca su foto para verla más grande.'],'productos','Ir a Productos'],
  ['📷','Vendido','Para registrar lo vendido con la cámara o con un lector',
-  ['<b>Cantidad por venta:</b> cuántas unidades se descuentan en cada escaneo.','<b>Descuento para la próxima venta:</b> en % o en Bs; se aplica al siguiente producto que escanees.','<b>Abrir cámara:</b> escanea el código de barras de la etiqueta (también funciona con un lector USB o Bluetooth).','<b>Escribir el código:</b> si no tienes cámara, escribe el código (ej. RO-001) y toca Vendido.','<b>Ventas de hoy:</b> lista de lo vendido hoy, con Editar y Eliminar.'],
-  ['Imprime las etiquetas desde la pestaña Etiquetas.','Define la cantidad y, si hay, el descuento.','Toca <b>Abrir cámara</b> y apunta al código (o escríbelo).','La venta se guarda sola: baja el stock y se separa el <b>costo</b> de la <b>ganancia</b>.','Si te equivocas, usa <b>Editar</b> o <b>Eliminar</b> en «Ventas de hoy»: el stock se devuelve.'],'vender','Ir a Vendido'],
+  ['<b>Cantidad por venta:</b> cuántas unidades se descuentan en cada escaneo.','<b>Clienta:</b> elige a la clienta (o agrégala con ➕ Nueva clienta) para que la compra quede en su bolsita; si tiene un premio de descuento, puedes aplicarlo aquí.','<b>Descuento para la próxima venta:</b> en % o en Bs; se aplica al siguiente producto que escanees.','<b>Abrir cámara:</b> escanea el código de barras de la etiqueta (también funciona con un lector USB o Bluetooth).','<b>Escribir el código:</b> si no tienes cámara, escribe el código (ej. RO-001) y toca Vendido.','<b>Ventas de hoy:</b> lista de lo vendido hoy, con Editar y Eliminar.'],
+  ['Imprime las etiquetas desde la pestaña Etiquetas.','Elige a la <b>clienta</b> (si ya está registrada) y define la cantidad y, si hay, el descuento o el premio.','Toca <b>Abrir cámara</b> y apunta al código (o escríbelo).','La venta se guarda sola: baja el stock y se separa el <b>costo</b> de la <b>ganancia</b>.','Si te equivocas, usa <b>Editar</b> o <b>Eliminar</b> en «Ventas de hoy»: el stock se devuelve.'],'vender','Ir a Vendido'],
+ ['👛','Clientas','Para registrar a quienes compran y guardar sus compras',
+  ['<b>Agregar clienta:</b> nombre, teléfono y una nota (gustos, talla, cumpleaños).','<b>Mis clientas:</b> lista con buscador, de la que más compró a la que menos; muestra compras, total, giros de ruleta y premios pendientes.','<b>Bolsita:</b> al tocar «👛 Bolsita» se ven todas sus compras, sus descuentos, los premios que ganó y sus giros.'],
+  ['Registra a la clienta con su nombre.','Cuando vendas, elígela en <b>Vendido</b> o en <b>Ingresos</b>: la compra se guarda en su bolsita.','Abre su <b>bolsita</b> para ver lo que ha comprado y ganado.','Si hay un error en un dato, usa <b>Editar</b>. Si la eliminas, sus compras se conservan en Ingresos.'],'clientas','Ir a Clientas'],
+ ['🎡','Ruleta','Para sortear premios pequeños entre las clientas',
+  ['<b>Ruleta:</b> gira y muestra el premio ganado; el resultado se guarda en la bolsita de la clienta.','<b>Giros:</b> se ganan según lo que compra (por defecto 1 giro por cada Bs 100; se puede cambiar, o dar giros a mano desde su bolsita).','<b>Editar premios:</b> cambia el texto, el tipo (descuento en %, descuento en Bs, regalo o sin premio), el valor y la probabilidad; agrega o quita premios.','<b>Premios ganados:</b> historial con su estado (pendiente, usado o entregado).'],
+  ['Elige a la clienta que va a girar (o «giro de prueba» para practicar).','Toca <b>GIRAR</b> y espera el resultado.','Si ganó un descuento, en <b>Vendido</b> elige su nombre y su premio para aplicarlo en la próxima compra.','Si ganó un regalo, entrégalo y márcalo como <b>Entregado</b> en su bolsita.','Para cambiar los premios, edítalos en la misma pestaña.'],'ruleta','Ir a Ruleta'],
  ['💰','Ingresos','Para anotar cada venta o entrada de dinero',
   ['<b>Registrar ingreso:</b> fecha, concepto (ej. Venta de productos), producto (opcional), cantidad, descuento en % o Bs y precio final.','<b>Precio final:</b> se calcula solo y muestra el precio de lista menos el descuento.','<b>Tabla de ingresos:</b> fecha, concepto, producto, cantidad, monto, descuento, costo y ganancia, con Editar y Eliminar. El total está arriba.'],
   ['Elige el <b>concepto</b>.','Elige el <b>producto</b> y la cantidad: el precio se calcula solo y el stock baja automáticamente.','Si hay descuento, escríbelo y elige <b>%</b> o <b>Bs</b>: el precio final cambia al instante.','Toca <b>Guardar</b>. Si no vendiste un producto de la lista, deja «ninguno» y escribe el monto.'],'ingresos','Ir a Ingresos'],
@@ -547,7 +562,7 @@ guia(){
   ['Revisa las opciones que ya vienen de ejemplo.','Agrega las que te falten. También puedes hacerlo desde cualquier desplegable con <b>➕ Agregar nueva…</b>.','Si necesitas un tipo de producto nuevo, crea una categoría.'],'catalogos','Ir a Listas']];
  const li=a=>a.map(x=>`<li>${x}</li>`).join('');
  return `<div class='card'><h2>👋 Cómo empezar</h2><p style='margin:0'>Esta herramienta te ayuda a llevar el control de tu tienda sin cuentas complicadas. Solo debes <b>elegir de listas y escribir montos</b>: el sistema calcula todo lo demás. Abajo encuentras <b>cada sección</b> de la app: qué contiene y qué debes hacer.</p><p style='margin:8px 0 0;color:var(--mut)'>💾 Todo se guarda solo, en este dispositivo. Si conectas la Hoja de Google (pestaña Respaldo), también se comparte entre todos los dispositivos conectados.</p></div>
- <div class='card'><h2>🧭 Orden recomendado</h2><ol style='margin:0;padding-left:20px'><li>Revisa tus <b>Listas</b> (solo la primera vez).</li><li>Registra tus <b>Productos</b>.</li><li>Imprime tus <b>Etiquetas</b>.</li><li>Cada vez que vendas, usa <b>Vendido</b> o <b>Ingresos</b>.</li><li>Cuando gastes, invites o debas algo, usa <b>Egresos</b>, <b>Inversión</b> o <b>Deudas</b>.</li><li>Revisa el <b>Dashboard</b>, la <b>Ganancia real</b> y los <b>Descuentos</b> para ver cómo vas.</li><li>De vez en cuando, descarga un <b>Respaldo</b>.</li></ol></div>
+ <div class='card'><h2>🧭 Orden recomendado</h2><ol style='margin:0;padding-left:20px'><li>Revisa tus <b>Listas</b> (solo la primera vez).</li><li>Registra tus <b>Productos</b>.</li><li>Imprime tus <b>Etiquetas</b>.</li><li>Registra a tus <b>Clientas</b> y, cada vez que vendas, usa <b>Vendido</b> o <b>Ingresos</b> eligiendo a la clienta.</li><li>Cuando gastes, invites o debas algo, usa <b>Egresos</b>, <b>Inversión</b> o <b>Deudas</b>.</li><li>Revisa el <b>Dashboard</b>, la <b>Ganancia real</b> y los <b>Descuentos</b> para ver cómo vas.</li><li>De vez en cuando, descarga un <b>Respaldo</b>.</li></ol></div>
  ${sec.map((s,i)=>`<div class='card step'><div class='num'>${i+1}</div><div><h3>${s[0]} ${s[1]}</h3><small>${s[2]}</small><div style='margin-top:8px'><div class='sp' style='font-weight:700'>Qué encuentras aquí</div><ul style='margin:4px 0 8px;padding-left:20px'>${li(s[3])}</ul><div class='sp' style='font-weight:700'>Lo que debes hacer</div><ol>${li(s[4])}</ol></div><p style='margin:8px 0 0'><button class='btn s' data-tab='${s[5]}'>${s[6]} →</button></p></div></div>`).join('')}
  <div class='card'><h2>📚 Palabras clave</h2><ul><li><b>Ingresos:</b> el dinero que entra por tus ventas.</li><li><b>Egresos:</b> el dinero que gastas.</li><li><b>Ganancia:</b> ingresos − egresos.</li><li><b>Ganancia real:</b> lo vendido − el costo de lo vendido.</li><li><b>Inversión:</b> dinero que pones para empezar o crecer.</li><li><b>Margen:</b> qué parte de lo vendido es ganancia.</li><li><b>Retorno sobre inversión:</b> cuánto has ganado comparado con lo invertido.</li><li><b>Stock:</b> las unidades que te quedan de cada producto.</li><li><b>Descuento:</b> lo que rebajas del precio de lista al vender.</li><li><b>Retiro:</b> dinero que sacas de la ganancia real (pago personal o reinversión).</li></ul></div>
  <div class='card'><h2>✨ Consejos</h2><ul><li>Registra tus ventas el mismo día: toma menos de un minuto.</li><li>Revisa el Dashboard una vez por semana.</li><li>Si un producto baja a 2 unidades o menos, el Dashboard te lo cuenta en «Stock bajo».</li></ul></div>`},
@@ -584,6 +599,16 @@ productos(){
  <label style="grid-column:1/-1">Descripción del producto (opcional)<textarea name="desc" rows="2" placeholder="Ej: material, talla, color, detalles, cuidados…"></textarea></label>
  <div class="frow"><small>Foto del producto (opcional)</small><label class="fl">📷 Tomar foto<input type="file" id="pfoto" accept="image/*" capture="environment" hidden></label><label class="fl g">🖼️ Galería<input type="file" id="pfoto2" accept="image/*" hidden></label><span id="pprev">${PF?`<img src="${PF}" alt="">`:''}</span></div>
  <button class="btn">Guardar producto</button></form></div>
+ <div class="card"><h2>🛒 Vender a una clienta (opcional)</h2>
+ <p style="margin:0 0 10px;color:var(--mut)">Elige a la clienta y toca <b>🛒 Vender</b> en el producto de abajo: la compra queda en su bolsita y suma a lo que lleva comprado para la ruleta. Si no eliges a nadie, la venta se guarda igual, sin clienta.</p>
+ <div class="grid"><label>Clienta (opcional)<select id="vcl">${cliOpts(SC.cli)}</select></label>
+ <label>Premio de su bolsita (reemplaza el descuento escrito)<select id="vpr">${prOpts(SC.cli)}</select></label>
+ <button type="button" class="btn s" data-act="newcli">➕ Nueva clienta</button></div>
+ <p id="vcinfo" class="msg" style="margin:6px 0 10px">${vcInfoHtml()}</p>
+ <div class="grid"><label>Cantidad por venta<input id="sq" type="number" min="1" value="1"></label>
+ <label>Descuento (opcional)<input id="vd" type="number" min="0" step="0.01" value="0"></label>
+ <label>Descuento en<select id="vdt"><option value="%">% (porcentaje)</option><option value="bs">Bs (monto)</option></select></label></div>
+ <p id="vlast" class="msg">${esc(SC.msg||'')}</p></div>
  <div class="card"><h2>Inventario</h2><input id="q" placeholder="Buscar por código, nombre, marca…" style="margin-bottom:10px"><div id="plist">${prodTable('')}</div></div>
  ${views.descuentos()}`},
 ingresos(){
@@ -592,10 +617,10 @@ ingresos(){
  <label>Fecha<input name="fecha" type="date" value="${today()}" required></label>
  ${dd('concepto',S.listas.ing,'Concepto')}
  <label>Categoría<select id="icat" name="cat"><option value="">— todas —</option>${opts(Object.keys(S.cats))}</select></label>
- <label>Producto (opcional)<select id="ip" name="prod">${prodOpts('')}</select></label>
+ <label>Producto (opcional)<select id="ip" name="prod">${prodOpts('')}</select></label><label>Clienta (opcional)<select name="cli">${cliOpts('')}</select></label>
  <label>Cantidad<input id="iq" name="cant" type="number" min="1" value="1"></label><label>Descuento en<select id="idt" name="dt"><option value="%">% (porcentaje)</option><option value="bs">Bs (monto)</option></select></label><label>Descuento · opcional<input id="idc" name="desc" type="number" step="0.01" min="0" value="0"></label>${money('im','Precio final (Bs)')}<div id="ihint" class="edn" style="grid-column:1/-1"></div>
  <button class="btn">Guardar</button></form></div>
- <div class="card"><h2>Ingresos <span class="tot good">${fmt(sum(S.ingresos,'monto'))}</span></h2>${tbl(['Fecha','Concepto','Categoría','Producto','Cant.','Monto','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P),g=(+i.monto||0)-c;return `<tr><td>${i.fecha}</td><td>${esc(i.concepto)}</td><td>${esc(pcatOf(i)||'—')}</td><td>${i.prod?esc(pname(i.prod)):'—'}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class="${g>=0?'good':'bad'}">${fmt(g)}</td>${del('ingresos',i.id)}</tr>`}))}</div>`},
+ <div class="card"><h2>Ingresos <span class="tot good">${fmt(sum(S.ingresos,'monto'))}</span></h2>${tbl(['Fecha','Concepto','Categoría','Producto','Clienta','Cant.','Monto','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P),g=(+i.monto||0)-c;return `<tr><td>${i.fecha}</td><td>${esc(i.concepto)}</td><td>${esc(pcatOf(i)||'—')}</td><td>${i.prod?esc(pname(i.prod)):'—'}</td><td>${esc(cliName(i.cli)||'—')}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class="${g>=0?'good':'bad'}">${fmt(g)}</td>${del('ingresos',i.id)}</tr>`}))}</div>`},
 egresos(){
  const l=byDate(S.egresos);
  return `<div class="card"><h2>Registrar egreso</h2><form data-f="egr" class="grid">
@@ -625,6 +650,10 @@ deudas(){
 vender(){
  return `<div class='card'><h2>📷 Vendido con código de barras</h2>
  <p style='margin:0 0 10px;color:var(--mut)'>Apunta la cámara al código de barras de la etiqueta: la venta se guarda sola, baja el stock y se separa el costo de la ganancia. También funciona con un lector de códigos USB o Bluetooth.</p>
+ <div class='grid'><label>Clienta (opcional)<select id='vcl'>${cliOpts(SC.cli)}</select></label>
+ <label>Premio de su bolsita (reemplaza el descuento escrito)<select id='vpr'>${prOpts(SC.cli)}</select></label>
+ <button class='btn s' data-act='newcli'>➕ Nueva clienta</button></div>
+ <p id='vcinfo' class='msg' style='margin:6px 0 12px'>${vcInfoHtml()}</p>
  <div class='grid'><label>Cantidad por venta<input id='sq' type='number' min='1' value='1'></label>
  <label>Descuento para la próxima venta<input id='vd' type='number' min='0' step='0.01' value='0'></label>
  <label>Descuento en<select id='vdt'><option value='%'>% (porcentaje)</option><option value='bs'>Bs (monto)</option></select></label>
@@ -649,6 +678,39 @@ ganancia(){
  <button class='btn'>Guardar</button></form></div>
  <div class='card'><h2>Retiros registrados <span class='tot'>${fmt(R)}</span></h2>${tbl(['Fecha','Tipo','Monto','Nota',''],byDate(RT()).map(r=>`<tr><td>${r.fecha}</td><td>${esc(r.tipo)}</td><td>${fmt(r.monto)}</td><td>${esc(r.nota||'')}</td>${del('retiros',r.id)}</tr>`))}</div>
  <div class='card'><h2>Ganancia real por producto</h2>${tbl(['Producto','Vendidas','Vendido','Ganancia'],top.map(([id,o])=>`<tr><td>${esc(pname(id))}</td><td>${o.q}</td><td>${fmt(o.v)}</td><td class='${o.g>=0?'good':'bad'}'>${fmt(o.g)}</td></tr>`))}</div>`},
+clientas(){
+ return `<div class='card'><h2>👛 Agregar clienta</h2><p style='margin:0 0 10px;color:var(--mut)'>Cada clienta tiene su <b>bolsita</b>: ahí se guardan sus compras, sus descuentos y los premios que gana en la ruleta. El <b>total comprado</b> es lo que cada clienta nos ha dado en compras (en Bs)${RUL().por>0?`: gana <b>1 giro por cada ${fmt(RUL().por)}</b>`:''}.</p>
+ <form data-f='cli' class='grid'>
+ <label>Nombre<input name='nombre' required placeholder='Ej. María Pérez'></label>
+ <label>Teléfono / WhatsApp (opcional)<input name='tel' type='tel'></label>
+ <label>Nota (opcional)<input name='nota' placeholder='Gustos, talla, cumpleaños…'></label>
+ <button class='btn'>Guardar clienta</button></form></div>
+ <div class='card'><h2>Mis clientas <span class='tot'>${CLI().length}</span></h2>
+ <input id='cq' placeholder='Buscar por nombre o teléfono…' style='margin-bottom:10px'>
+ <div id='clist'>${cliTable('')}</div></div>`},
+ruleta(){
+ const R=RUL();
+ return `<div class='card'><h2>🎡 Ruleta de premios</h2>
+ <div class='grid'><label>¿Quién gira?<select id='rcl'>${cliOpts(RS.cli,'— giro de prueba (no se guarda) —')}</select></label></div>
+ <p id='rinfo' class='msg' style='margin:6px 0 0'></p>
+ <div class='rwrap'><div class='rptr'></div><canvas id='rcv' width='640' height='640'></canvas></div>
+ <p style='text-align:center;margin:6px 0'><button class='btn' id='rgo' data-act='spin'>🎡 GIRAR</button></p>
+ <div id='rres' class='rres'></div></div>
+ <div class='card'><h2>✏️ Editar los premios de la ruleta</h2>
+ <p style='margin:0 0 10px;color:var(--mut)'>Cambia lo que dice cada premio, su tipo y su valor. El <b>peso</b> decide qué tan seguido sale (más alto = sale más y ocupa más espacio en la ruleta); la columna Prob. te muestra la probabilidad real.</p>
+ <div id='redit'>${redit()}</div>
+ <h3 style='margin:16px 0 6px'>➕ Agregar un premio</h3>
+ <form data-f='rp' class='grid'>
+ <label>Qué dice<input name='txt' required placeholder='Ej. Gancho para el cabello'></label>
+ <label>Tipo<select name='tipo'>${RTIPOS.map(o=>`<option value='${o[0]}'>${o[1]}</option>`).join('')}</select></label>
+ <label>Valor (solo descuentos)<input name='valor' type='number' min='0' step='0.01' value='0'></label>
+ <label>Peso<input name='peso' type='number' min='0.1' step='0.1' value='1'></label>
+ <button class='btn'>➕ Agregar a la ruleta</button></form>
+ <p style='margin:12px 0 0'><button class='btn x s' data-act='rreset'>Volver a los premios de ejemplo</button></p></div>
+ <div class='card'><h2>Cómo se ganan los giros</h2>
+ <label>Dar 1 giro por cada Bs <input id='rpor' type='number' min='0' step='1' value='${R.por||0}' style='max-width:140px;display:inline-block'> comprados</label>
+ <p class='edn'>Se cuenta sobre el total que lleva comprado cada clienta (0 = no dar giros solos). También puedes dar o quitar giros a mano desde su bolsita.</p></div>
+ <div class='card'><h2>🎁 Premios ganados</h2><div id='rhist'>${rhist()}</div></div>`},
 descuentos(){
  const M=today().slice(0,7),all=S.ingresos,l=byDate(all.filter(i=>idesc(i)>0)),P=pmap(),sd=a=>a.reduce((t,i)=>t+idesc(i),0);
  const D=sd(l),Lt=l.reduce((t,i)=>t+ilista(i),0),DM=sd(l.filter(i=>(i.fecha||'').slice(0,7)===M)),nv=all.filter(i=>i.prod).length;
@@ -739,25 +801,30 @@ async function sellP(p,q){
  q=Math.max(1,Math.floor(+q||1));
  if(p.stock<q){SC.busy=true;const ok=await ask('«'+p.nom+'» ('+p.cod+') figura con stock '+p.stock+'. ¿Registrar la venta igual?');SC.busy=false;if(!ok){SC.msg='Venta cancelada.';refreshV();return false}}
  SC.fid=p.id;p.stock=Math.max(0,p.stock-q);touch(p);
- const lista=+(p.precio*q).toFixed(2),vd=$('#vd'),dv=Math.max(0,+(vd&&vd.value)||0),dt=$('#vdt')?$('#vdt').value:'%',dsc=+(dt==='%'?lista*Math.min(dv,100)/100:Math.min(dv,lista)).toFixed(2);
- const r={id:uid(),fecha:today(),concepto:'Venta de productos',cat:p.cat,prod:p.id,cant:q,monto:+(lista-dsc).toFixed(2),lista,desc:dsc,costo:+(p.costo*q).toFixed(2),ts:Date.now()};
- S.ingresos.push(r);save();if(vd)vd.value=0;
- SC.msg='✔ '+p.cod+' · '+p.nom+' ×'+q+' — vendido '+fmt(r.monto)+(dsc>0?' (con descuento de '+fmt(dsc)+')':'')+' · ganancia '+fmt(r.monto-r.costo);
+ const lista=+(p.precio*q).toFixed(2),vd=$('#vd'),dv=Math.max(0,+(vd&&vd.value)||0),dt=$('#vdt')?$('#vdt').value:'%';
+ const cid=($('#vcl')||{}).value||'',cc=CLI().find(x=>x.id===cid),gb=cc?cliStat(cc).giros:0,prid=($('#vpr')||{}).value||'',pz=prid?PRZ().find(x=>x.id===prid&&!x.usado):null;
+ let dsc=+(dt==='%'?lista*Math.min(dv,100)/100:Math.min(dv,lista)).toFixed(2);
+ if(pz)dsc=+(pz.tipo==='pct'?lista*Math.min(pz.valor,100)/100:Math.min(pz.valor,lista)).toFixed(2);
+ const r={id:uid(),fecha:today(),concepto:'Venta de productos',cat:p.cat,cli:cid,prod:p.id,cant:q,monto:+(lista-dsc).toFixed(2),lista,desc:dsc,costo:+(p.costo*q).toFixed(2),ts:Date.now()};
+ if(pz){pz.usado=true;pz.fu=today();pz.venta=r.id;touch(pz)}
+ S.ingresos.push(r);save();if(vd)vd.value=0;const ga=cc?cliStat(cc).giros:0;
+ SC.msg='✔ '+p.cod+' · '+p.nom+' ×'+q+' — vendido '+fmt(r.monto)+(dsc>0?' (con descuento de '+fmt(dsc)+')':'')+' · ganancia '+fmt(r.monto-r.costo)+(pz?' · 🎁 premio aplicado':'')+(cc?' · 👛 '+cc.nombre:'')+(ga>gb?' · 🎡 ¡ganó '+(ga-gb)+' giro(s) de ruleta!':'');
  beep(true);refreshV();return true}
-function refreshV(){const a=$('#vlast'),b=$('#vtoday'),c=$('#vpic');if(a)a.textContent=SC.msg||'Listo para registrar lo vendido.';if(b)b.innerHTML=vtoday();if(c)c.innerHTML=vpic()}
+function refreshV(){const a=$('#vlast'),b=$('#vtoday'),c=$('#vpic');if(a)a.textContent=SC.msg||'Listo para registrar lo vendido.';if(b)b.innerHTML=vtoday();if(c)c.innerHTML=vpic();const d=$('#vcinfo');if(d)d.innerHTML=vcInfoHtml();const pr=$('#vpr');if(pr){const cur=pr.value;pr.innerHTML=prOpts(SC.cli);pr.value=cur}}
 function vtoday(){
  const T=today(),P=pmap(),all=S.ingresos.filter(i=>i.fecha===T),G=gsum(all,P),l=all.filter(i=>i.prod).sort((a,b)=>(b.ts||0)-(a.ts||0));
  return `<div class='kpis'><div class='kpi'><small>Vendido hoy</small><b class='good'>${fmt(G.v)}</b></div><div class='kpi'><small>Costo de lo vendido</small><b>${fmt(G.c)}</b></div><div class='kpi'><small>Ganancia real hoy</small><b class='${G.g>=0?'good':'bad'}'>${fmt(G.g)}</b></div><div class='kpi'><small>Descuentos dados hoy</small><b>${fmt(all.reduce((t,i)=>t+idesc(i),0))}</b></div></div>`+
- tbl(['Hora','Producto','Cant.','Vendido','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P);
-  return `<tr><td>${i.ts?new Date(i.ts).toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'}):'—'}</td><td>${esc(pname(i.prod))}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class='${i.monto-c>=0?'good':'bad'}'>${fmt(i.monto-c)}</td>${del('ingresos',i.id)}</tr>`}))}
+ tbl(['Hora','Producto','Clienta','Cant.','Vendido','Desc.','Costo','Ganancia',''],l.map(i=>{const c=icost(i,P);
+  return `<tr><td>${i.ts?new Date(i.ts).toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit'}):'—'}</td><td>${esc(pname(i.prod))}</td><td>${esc(cliName(i.cli)||'—')}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td><td>${fmt(c)}</td><td class='${i.monto-c>=0?'good':'bad'}'>${fmt(i.monto-c)}</td>${del('ingresos',i.id)}</tr>`}))}
 
 /* ===== Editar registros ===== */
 const EDF={
  productos:[['cod','Código','text'],['nom','Producto','text'],['det','Detalle','text'],['marca','Marca','text'],['desc','Descripción','area'],['costo','Costo (Bs)','num'],['precio','Precio de venta (Bs)','num'],['stock','Stock','int']],
- ingresos:[['fecha','Fecha','date'],['concepto','Concepto','list:ing'],['prod','Producto','prod'],['cant','Cantidad','int'],['monto','Monto cobrado (Bs)','num'],['desc','Descuento (Bs)','num'],['costo','Costo de lo vendido (Bs)','num']],
+ ingresos:[['fecha','Fecha','date'],['concepto','Concepto','list:ing'],['prod','Producto','prod'],['cli','Clienta','cli'],['cant','Cantidad','int'],['monto','Monto cobrado (Bs)','num'],['desc','Descuento (Bs)','num'],['costo','Costo de lo vendido (Bs)','num']],
  egresos:[['fecha','Fecha','date'],['concepto','Concepto','list:egr'],['monto','Monto (Bs)','num']],
  inversiones:[['fecha','Fecha','date'],['concepto','Concepto','list:inv'],['monto','Monto (Bs)','num']],
  deudas:[['fecha','Fecha','date'],['tipo','Tipo','sel:Por pagar|Por cobrar'],['persona','Persona / entidad','list:per'],['concepto','Detalle','list:deu'],['monto','Monto (Bs)','num'],['pagado','Pagado (Bs)','num'],['vence','Vence','date']],
+ clientas:[['nombre','Nombre','text'],['tel','Teléfono / WhatsApp','text'],['nota','Nota (gustos, cumpleaños…)','area'],['extra','Giros extra (+ o −)','sint']],
  retiros:[['fecha','Fecha','date'],['tipo','Tipo','sel:Pago personal|Reinversión'],['monto','Monto (Bs)','num'],['nota','Nota','text']]};
 function editRec(c,id){
  const r=S[c]&&S[c].find(x=>x.id===id);if(!r||!EDF[c])return;
@@ -768,6 +835,8 @@ function editRec(c,id){
   if(t==='prod')return `<label>${l}<select name="${k}"><option value="">— ninguno —</option>${S.productos.map(p=>`<option value="${p.id}"${p.id===v?' selected':''}>${esc(p.cod)} · ${esc(p.nom)}</option>`).join('')}</select></label>`;
   if(t.startsWith('sel:'))return `<label>${l}<select name="${k}">${t.slice(4).split('|').map(o=>so(o,v)).join('')}</select></label>`;
   if(t.startsWith('list:')){const a=[...(S.listas[t.slice(5)]||[])];if(v&&!a.includes(v))a.unshift(v);return `<label>${l}<select name="${k}">${a.map(o=>so(o,v)).join('')}</select></label>`}
+  if(t==='cli')return `<label>${l}<select name="${k}">${cliOpts(v)}</select></label>`;
+  if(t==='sint')return `<label>${l}<input name="${k}" type="number" step="1" value="${esc(v)}"></label>`;
   if(t==='area')return `<label>${l}<textarea name="${k}" rows="3">${esc(v)}</textarea></label>`;
   return `<label>${l}<input name="${k}" type="${t==='date'?'date':t==='text'?'text':'number'}"${t==='num'?' step="0.01" min="0"':t==='int'?' step="1" min="0"':''} value="${esc(v)}"></label>`};
  const o=document.createElement('div');o.className='mdl';
@@ -788,6 +857,7 @@ function applyEdit(c,r,v,P){
   const co=num('costo'),pr=num('precio'),st=num('stock');
   if([co,pr,st].some(x=>isNaN(x)||x<0))return 'Costo, precio y stock deben ser números desde 0.';
   Object.assign(r,{cod,nom,det:v.det.trim(),marca:v.marca.trim(),desc:(v.desc||'').trim(),costo:co,precio:pr,stock:Math.floor(st)});delete r.attr;touch(r);return null}
+ if(c==='clientas'){const n=v.nombre.trim();if(!n)return 'Escribe el nombre.';const ex=parseInt(v.extra,10);Object.assign(r,{nombre:n,tel:v.tel.trim(),nota:(v.nota||'').trim(),extra:isNaN(ex)?0:ex});touch(r);return null}
  if(!v.fecha)return 'Falta la fecha.';
  const mo=num('monto');
  if(c==='ingresos'){
@@ -802,12 +872,144 @@ function applyEdit(c,r,v,P){
   let cc=co;if(Math.abs(co-oc)<.005&&(v.prod!==(r.prod||'')||q!==oq))cc=np?np.costo*q:0;
   const ol=ilista(r),omo=+r.monto||0,od=idesc(r);let nm=mo,nd=dn;
   if(!eq(nd,od)&&eq(mo,omo))nm=Math.max(0,ol-nd);else if(!eq(mo,omo)&&eq(nd,od))nd=Math.max(0,+(ol-mo).toFixed(2));
-  Object.assign(r,{fecha:v.fecha,concepto:v.concepto,prod:np?np.id:'',cant:np?q:0,monto:+nm.toFixed(2),desc:+nd.toFixed(2),lista:+(nm+nd).toFixed(2),costo:+cc.toFixed(2)});touch(r);return null}
+  Object.assign(r,{fecha:v.fecha,concepto:v.concepto,cli:v.cli||'',prod:np?np.id:'',cant:np?q:0,monto:+nm.toFixed(2),desc:+nd.toFixed(2),lista:+(nm+nd).toFixed(2),costo:+cc.toFixed(2)});touch(r);return null}
  if(isNaN(mo)||mo<=0)return 'Escribe un monto mayor que 0.';
  if(c==='deudas'){const pa=num('pagado');if(isNaN(pa)||pa<0||pa>mo)return 'Lo pagado debe estar entre 0 y el monto.';r.pagado=pa}
  Object.keys(v).forEach(k=>{if(k==='monto'||k==='pagado')return;r[k]=v[k].trim()});r.monto=mo;touch(r);return null}
 Object.assign(ACT,{camon:camOn,camoff:camOff,manual(){const i=$('#sm');if(i&&i.value.trim()){sellCode(i.value.trim());i.value=''}}});
 document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='sm'&&e.key==='Enter'){e.preventDefault();ACT.manual()}});
+/* ===== Clientas, bolsita y ruleta ===== */
+const CLI=()=>S.clientas||(S.clientas=[]);
+const PRZ=()=>S.premios||(S.premios=[]);
+const RDEF=()=>({por:100,premios:[
+ {id:'r1',txt:'5% de descuento',tipo:'pct',valor:5,peso:2},
+ {id:'r2',txt:'10% de descuento',tipo:'pct',valor:10,peso:1},
+ {id:'r3',txt:'Bs 5 de descuento',tipo:'bs',valor:5,peso:2},
+ {id:'r4',txt:'Llavero 🎀',tipo:'regalo',valor:0,peso:2},
+ {id:'r5',txt:'Espejito de bolsillo',tipo:'regalo',valor:0,peso:1},
+ {id:'r6',txt:'Gomitas 🍬',tipo:'regalo',valor:0,peso:2},
+ {id:'r7',txt:'Stickers ✨',tipo:'regalo',valor:0,peso:2},
+ {id:'r8',txt:'¡Sigue participando! 💖',tipo:'nada',valor:0,peso:2}]});
+const RUL=()=>{if(!S.ruleta||!Array.isArray(S.ruleta.premios))S.ruleta=RDEF();return S.ruleta};
+const touchR=()=>{RUL().mod=Date.now()};
+const cliName=id=>{const c=CLI().find(x=>x.id===id);return c?c.nombre:''};
+function cliStat(c){const v=S.ingresos.filter(i=>i.cli===c.id),tot=sum(v,'monto'),por=+RUL().por||0,earned=por>0?Math.floor(tot/por):0,
+ used=PRZ().filter(p=>p.cli===c.id).length,pend=PRZ().filter(p=>p.cli===c.id&&!p.usado);
+ return{v,n:v.length,tot,giros:Math.max(0,earned+(+c.extra||0)-used),pend,desc:v.reduce((t,i)=>t+idesc(i),0),por,falta:por>0?+((Math.floor(tot/por)+1)*por-tot).toFixed(2):null}}
+const cliOpts=(sel,first)=>`<option value="">${first||'— sin clienta —'}</option>`+[...CLI()].sort((a,b)=>a.nombre.localeCompare(b.nombre)).map(c=>`<option value="${c.id}"${c.id===sel?' selected':''}>${esc(c.nombre)}${c.tel?' · '+esc(c.tel):''}</option>`).join('');
+const prOpts=cid=>'<option value="">— ninguno —</option>'+PRZ().filter(p=>p.cli===cid&&!p.usado&&(p.tipo==='pct'||p.tipo==='bs')).map(p=>`<option value="${p.id}">🎁 ${esc(p.txt)}</option>`).join('');
+function vcInfoHtml(){const c=CLI().find(x=>x.id===SC.cli);if(!c)return'';const s=cliStat(c),g=s.pend.filter(p=>p.tipo==='regalo').length,d=s.pend.length-g;
+ return `👛 <b>${esc(c.nombre)}</b> · ${s.n} compra(s) · ${fmt(s.tot)}${s.giros>0?` · <b>🎡 ${s.giros} giro(s) disponible(s)</b>`:''}${s.falta!=null?` · faltan ${fmt(s.falta)} para su próximo giro`:''}${d?` · 🏷️ ${d} descuento(s) por usar`:''}${g?` · 🎁 ${g} regalo(s) por entregar`:''} <button class="btn s" data-bolsa="${c.id}">Ver bolsita</button>${s.giros>0?` <button class="btn s" data-girar="${c.id}">🎡 Girar</button>`:''}`}
+function newCli(cb){
+ const o=document.createElement('div');o.className='mdl';
+ o.innerHTML=`<div class="mb ed"><h2>👛 Nueva clienta</h2><label>Nombre<input name="n" placeholder="Ej. María Pérez"></label><label>Teléfono (opcional)<input name="t" type="tel"></label><p class="err bad" hidden></p><div class="edb"><button class="btn x s" data-v="0">Cancelar</button><button class="btn s" data-v="1">Guardar</button></div></div>`;
+ o.onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.v==='0'){o.remove();return}
+  if(b.dataset.v==='1'){const n=o.querySelector('[name=n]').value.trim();
+   if(!n){const m=o.querySelector('.err');m.textContent='Escribe el nombre.';m.hidden=false;return}
+   const c={id:uid(),nombre:n,tel:o.querySelector('[name=t]').value.trim(),nota:'',extra:0,fecha:today(),ts:Date.now()};
+   CLI().push(c);save();o.remove();cb(c)}};
+ document.body.appendChild(o);o.querySelector('[name=n]').focus()}
+function cliTable(q){q=String(q||'').toLowerCase().trim();
+ const l=CLI().map(c=>({c,s:cliStat(c)})).filter(x=>!q||(x.c.nombre+' '+(x.c.tel||'')).toLowerCase().includes(q)).sort((a,b)=>b.s.tot-a.s.tot||a.c.nombre.localeCompare(b.c.nombre));
+ return tbl(['Clienta','Teléfono','Compras','Total comprado','Próximo giro','Giros','Premios',''],l.map(({c,s})=>`<tr><td><b>${esc(c.nombre)}</b>${c.nota?`<br><small style="color:var(--mut)">${esc(c.nota)}</small>`:''}</td><td>${esc(c.tel||'—')}</td><td>${s.n}</td><td><b>${fmt(s.tot)}</b></td><td>${s.falta!=null?'faltan '+fmt(s.falta):'—'}</td><td>${s.giros>0?'🎡 '+s.giros:'—'}</td><td>${s.pend.length?'🎁 '+s.pend.length:'—'}</td><td class="r"><button class="btn s" data-bolsa="${c.id}">👛 Bolsita</button> <button class="btn s" data-edit="clientas:${c.id}">Editar</button> <button class="btn x s" data-del="clientas:${c.id}">Eliminar</button></td></tr>`))}
+
+/* --- Bolsita --- */
+function bolsa(id){let o=$('#bolsa');if(!o){o=document.createElement('div');o.id='bolsa';o.className='mdl';o.onclick=bolsaClick;document.body.appendChild(o)}o.dataset.cid=id;drawBolsa()}
+function drawBolsa(){
+ const o=$('#bolsa');if(!o)return;const c=CLI().find(x=>x.id===o.dataset.cid);if(!c){o.remove();return}
+ const s=cliStat(c),pz=PRZ().filter(p=>p.cli===c.id).sort((a,b)=>(b.ts||0)-(a.ts||0));
+ const kp=(l,v,cl)=>`<div class="kpi"><small>${l}</small><b class="${cl||''}">${v}</b></div>`;
+ const st=p=>p.tipo==='nada'?'Sin premio':p.usado?(p.tipo==='regalo'?'✔ Entregado':'✔ Usado'):'⏳ Pendiente';
+ o.innerHTML=`<div class="mb ed bolsa"><button class="fx2" data-bv="x" title="Cerrar">✕</button><h2>👛 Bolsita de ${esc(c.nombre)}</h2>${c.tel?`<p class="edn">📱 ${esc(c.tel)}</p>`:''}${c.nota?`<p class="edn">📝 ${esc(c.nota)}</p>`:''}
+ <div class="kpis" style="margin:10px 0">${kp('Total comprado',fmt(s.tot),'good')}${kp('Compras',s.n)}${kp('Descuentos recibidos',fmt(s.desc))}${kp('Giros de ruleta',s.giros)}${s.falta!=null?kp('Falta para el próximo giro',fmt(s.falta)):''}</div>
+ <div class="edb" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn s" data-bv="spin"${s.giros>0?'':' disabled'}>🎡 Girar ruleta</button><button class="btn x s" data-bv="+g">+1 giro</button><button class="btn x s" data-bv="-g">−1 giro</button></div>
+ <h3>🎁 Premios</h3>${pz.length?tbl(['Fecha','Premio','Estado',''],pz.map(p=>`<tr><td>${p.fecha}</td><td>${esc(p.txt)}</td><td>${st(p)}</td><td class="r">${(!p.usado&&p.tipo==='regalo')?`<button class="btn s" data-bv="done:${p.id}">Entregado</button> `:''}<button class="btn x s" data-bv="rm:${p.id}">Anular</button></td></tr>`))+'<p class="edn">«Anular» borra el premio y le devuelve el giro a la clienta.</p>':'<p class="edn">Todavía no ha ganado premios.</p>'}
+ <h3>🛍️ Compras</h3>${s.v.length?tbl(['Fecha','Producto','Cant.','Cobrado','Desc.'],byDate(s.v).map(i=>`<tr><td>${i.fecha}</td><td>${i.prod?esc(pname(i.prod)):esc(i.concepto)}</td><td>${i.cant||''}</td><td>${fmt(i.monto)}</td><td>${dtxt(i)}</td></tr>`)):'<p class="edn">Todavía no tiene compras registradas. Elígela al vender para que se guarden aquí.</p>'}</div>`}
+async function bolsaClick(e){
+ const o=$('#bolsa');if(!o)return;if(e.target===o){o.remove();return}
+ const b=e.target.closest('button');if(!b||b.disabled)return;const v=b.dataset.bv;if(!v)return;
+ const c=CLI().find(x=>x.id===o.dataset.cid);if(!c)return;
+ if(v==='x')o.remove();
+ else if(v==='spin'){o.remove();RS.cli=c.id;tab='ruleta';render();scrollTo(0,0)}
+ else if(v==='+g'||v==='-g'){c.extra=(+c.extra||0)+(v==='+g'?1:-1);touch(c);save();render();drawBolsa()}
+ else if(v.startsWith('done:')){const p=PRZ().find(x=>x.id===v.slice(5));if(p){p.usado=true;p.fu=today();touch(p);save();render();drawBolsa()}}
+ else if(v.startsWith('rm:')){if(!await ask('¿Anular este premio? Se borra y se le devuelve el giro a la clienta.'))return;const id=v.slice(3);S.premios=PRZ().filter(x=>x.id!==id);tomb(id);save();render();drawBolsa()}}
+
+/* --- Ruleta --- */
+const RS={cli:'',ang:0,spinning:false};
+const rnd=()=>{try{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967296}catch(e){return Math.random()}};
+const WCOL=['#ff9bcb','#8fd3ff','#ffc2e0','#c9b3f5','#ffb3d6','#a8dcff','#e6c8ff','#ffd1e8'];
+function drawWheel(rot){
+ const cv=$('#rcv');if(!cv)return;if(rot==null)rot=RS.ang;
+ const g=cv.getContext('2d'),W=cv.width,c=W/2,r=c-14,P=RUL().premios,tw=P.reduce((t,p)=>t+(+p.peso||1),0);
+ g.clearRect(0,0,W,W);g.save();g.translate(c,c);
+ g.beginPath();g.arc(0,0,r+10,0,Math.PI*2);g.fillStyle='#fff';g.fill();g.lineWidth=4;g.strokeStyle='#ff4fa3';g.stroke();
+ g.rotate(rot);let a=-Math.PI/2;
+ P.forEach((p,i)=>{const w=(+p.peso||1)/tw*Math.PI*2;
+  g.beginPath();g.moveTo(0,0);g.arc(0,0,r,a,a+w);g.closePath();g.fillStyle=WCOL[i%WCOL.length];g.fill();g.lineWidth=3;g.strokeStyle='#fff';g.stroke();
+  g.save();g.rotate(a+w/2);g.textAlign='right';g.textBaseline='middle';g.fillStyle='#4a2560';
+  let fs=Math.min(30,Math.max(13,r*w*.42)),t=String(p.txt||''),o=t;const maxW=r*.64;g.font='700 '+fs+'px Nunito,sans-serif';
+  while(g.measureText(t).width>maxW&&fs>13){fs-=1;g.font='700 '+fs+'px Nunito,sans-serif'}
+  while(g.measureText(t).width>maxW&&t.length>3)t=t.slice(0,-1);
+  if(t!==o)t=t.replace(/\s+$/,'')+'…';
+  g.fillText(t,r-18,0);g.restore();a+=w});
+ g.restore();
+ g.save();g.translate(c,c);g.beginPath();g.arc(0,0,34,0,Math.PI*2);g.fillStyle='#fff';g.fill();g.lineWidth=4;g.strokeStyle='#ff4fa3';g.stroke();g.fillStyle='#ff4fa3';g.font='700 30px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('♥',0,2);g.restore()}
+function rinfo(){const el=$('#rinfo'),b=$('#rgo'),c=CLI().find(x=>x.id===RS.cli);
+ if(el)el.innerHTML=c?`👛 <b>${esc(c.nombre)}</b>: ${cliStat(c).giros} giro(s) disponible(s)`:'Giro de prueba: sirve para practicar, no se guarda nada.';
+ if(b&&!RS.spinning)b.disabled=!!(c&&cliStat(c).giros<1)}
+function confetti(){const cs=['#ff4fa3','#6fc3f7','#b58be8','#ff9bcb','#4fb3f0'],sy=['♥','✦','★','✧','♡'];
+ for(let i=0;i<46;i++){const p=document.createElement('span');p.className='cf2';p.textContent=sy[i%5];p.style.cssText='left:'+(innerWidth/2)+'px;top:'+(innerHeight*.45)+'px;font-size:'+(14+Math.random()*20)+'px;color:'+cs[i%5];document.body.appendChild(p);
+  const a=Math.random()*Math.PI*2,d=90+Math.random()*220;
+  requestAnimationFrame(()=>{p.style.transform='translate('+Math.cos(a)*d+'px,'+(Math.sin(a)*d+160)+'px) rotate('+(Math.random()*540)+'deg)';p.style.opacity='0'});setTimeout(()=>p.remove(),1800)}}
+function spin(){
+ if(RS.spinning)return;
+ const P=RUL().premios;if(P.length<2)return toast('Agrega al menos 2 premios a la ruleta.');
+ const cid=$('#rcl')?$('#rcl').value:'',c=cid?CLI().find(x=>x.id===cid):null;
+ if(cid&&!c)return;
+ if(c&&cliStat(c).giros<1)return toast(c.nombre+' no tiene giros disponibles.');
+ const tw=P.reduce((t,p)=>t+(+p.peso||1),0),x=rnd()*tw;let idx=P.length-1,cum=0;
+ for(let i=0;i<P.length;i++){const w=+P[i].peso||1;if(x<cum+w){idx=i;break}cum+=w}
+ const w=+P[idx].peso||1,aPtr=(cum+(.12+.76*rnd())*w)/tw*Math.PI*2,T=Math.PI*2;
+ const cur=((RS.ang%T)+T)%T,want=(T-aPtr)%T,delta=((want-cur)+T)%T,from=RS.ang,to=from+(5+Math.floor(rnd()*3))*T+delta,dur=5200,t0=performance.now();
+ RS.spinning=true;const b=$('#rgo');if(b)b.disabled=true;const rs=$('#rres');if(rs)rs.textContent='🎡 …';
+ const step=now=>{const t=Math.min(1,(now-t0)/dur);RS.ang=from+(to-from)*(1-Math.pow(1-t,4));drawWheel();
+  if(t<1)requestAnimationFrame(step);else{RS.ang=to%T;RS.spinning=false;drawWheel();spinEnd(P[idx],c)}};
+ requestAnimationFrame(step)}
+function spinEnd(pz,c){
+ if(c){PRZ().push({id:uid(),cli:c.id,fecha:today(),ts:Date.now(),txt:pz.txt,tipo:pz.tipo,valor:+pz.valor||0,usado:pz.tipo==='nada'});save()}
+ const res=$('#rres'),m=(pz.tipo==='nada'?'💖 ':pz.tipo==='regalo'?'🎁 ¡Ganó: ':'🎉 ¡Ganó: ')+pz.txt+(pz.tipo==='nada'?'':'!');
+ const nota=!c?'Giro de prueba: no se guardó nada.':pz.tipo==='regalo'?'Entrégaselo: quedó anotado en la bolsita de '+c.nombre+'.':pz.tipo==='nada'?'El giro quedó anotado en su bolsita.':'Quedó guardado en la bolsita de '+c.nombre+'. Úsalo en Vendido eligiendo su nombre y su premio.';
+ if(res)res.innerHTML=esc(m)+'<div class="edn" style="font-size:13px;font-weight:400">'+esc(nota)+'</div>';
+ if(pz.tipo!=='nada')confetti();beep(pz.tipo!=='nada');
+ const h=$('#rhist');if(h)h.innerHTML=rhist();rinfo()}
+function rhist(){const l=[...PRZ()].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,30);
+ return tbl(['Fecha','Clienta','Premio','Estado'],l.map(p=>`<tr><td>${p.fecha}</td><td>${esc(cliName(p.cli)||'—')}</td><td>${esc(p.txt)}</td><td>${p.tipo==='nada'?'Sin premio':p.usado?(p.tipo==='regalo'?'✔ Entregado':'✔ Usado'):'⏳ Pendiente'}</td></tr>`))}
+const RTIPOS=[['pct','% de descuento'],['bs','Bs de descuento'],['regalo','Regalo'],['nada','Sin premio']];
+function redit(){return tbl(['Qué dice','Tipo','Valor','Peso','Prob.',''],RUL().premios.map(p=>`<tr><td><input data-rp="${p.id}:txt" value="${esc(p.txt)}" style="min-width:170px"></td><td><select data-rp="${p.id}:tipo" style="min-width:140px">${RTIPOS.map(o=>`<option value="${o[0]}"${o[0]===p.tipo?' selected':''}>${o[1]}</option>`).join('')}</select></td><td><input data-rp="${p.id}:valor" type="number" min="0" step="0.01" value="${p.valor||0}" style="width:80px"${(p.tipo==='pct'||p.tipo==='bs')?'':' disabled'}></td><td><input data-rp="${p.id}:peso" type="number" min="0.1" step="0.1" value="${p.peso||1}" style="width:70px"></td><td data-rpb="${p.id}">…</td><td class="r"><button class="btn x s" data-rdel="${p.id}">Quitar</button></td></tr>`))}
+function updProb(){const P=RUL().premios,tw=P.reduce((t,p)=>t+(+p.peso||1),0);P.forEach(p=>{const e=document.querySelector('[data-rpb="'+p.id+'"]');if(e)e.textContent=(((+p.peso||1)/tw)*100).toFixed(0)+'%'})}
+function rpEdit(el){const q=el.dataset.rp.split(':'),p=RUL().premios.find(x=>x.id===q[0]);if(!p)return;const f=q[1],v=el.value;
+ if(f==='txt'){p.txt=v.trim()||p.txt||'Premio';el.value=p.txt}
+ else if(f==='tipo'){p.tipo=v;const row=el.closest('tr'),vi=row&&row.querySelector('[data-rp$=":valor"]');if(vi)vi.disabled=!(v==='pct'||v==='bs')}
+ else if(f==='valor')p.valor=Math.max(0,+v||0);
+ else if(f==='peso'){p.peso=Math.max(.1,+v||1);el.value=p.peso}
+ touchR();save();drawWheel();updProb()}
+
+Object.assign(ACT,{spin,
+ newcli(){newCli(c=>{SC.cli=c.id;const s=$('#vcl');if(s)s.innerHTML=cliOpts(SC.cli);const pr=$('#vpr');if(pr)pr.innerHTML=prOpts(SC.cli);const i=$('#vcinfo');if(i)i.innerHTML=vcInfoHtml();toast('Clienta guardada 👛')})},
+ async rreset(){if(!await ask('¿Volver a los premios de ejemplo? Se perderán los que editaste (no se borran los premios ya ganados).'))return;const por=RUL().por;S.ruleta=Object.assign(RDEF(),{por,mod:Date.now()});save();render()}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.bolsa)bolsa(d.bolsa);
+ else if(d.vp){const p=S.productos.find(x=>x.id===d.vp);if(p)sellP(p,$('#sq')?$('#sq').value:1).then(ok=>{const l=$('#plist');if(l)l.innerHTML=prodTable(($('#q')||{}).value||'');if(ok)toast(SC.msg)})}
+ else if(d.girar){RS.cli=d.girar;tab='ruleta';render();scrollTo(0,0)}
+ else if(d.rdel){if(RUL().premios.length<=2)return toast('La ruleta necesita al menos 2 premios.');RUL().premios=RUL().premios.filter(p=>p.id!==d.rdel);touchR();save();render()}});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.id==='vcl'){SC.cli=t.value;const pr=$('#vpr');if(pr)pr.innerHTML=prOpts(SC.cli);const i=$('#vcinfo');if(i)i.innerHTML=vcInfoHtml()}
+ else if(t.id==='rcl'){RS.cli=t.value;rinfo()}
+ else if(t.dataset&&t.dataset.rp)rpEdit(t);
+ else if(t.id==='rpor'){RUL().por=Math.max(0,+t.value||0);touchR();save();rinfo()}});
+document.addEventListener('input',e=>{if(e.target.id==='cq'){const l=$('#clist');if(l)l.innerHTML=cliTable(e.target.value)}});
 /* ===== Fotos de productos (se guardan en este dispositivo) ===== */
 let _fdb,PF=null;const FOT={};
 const fdb=()=>_fdb||(_fdb=new Promise((res,rej)=>{const r=indexedDB.open('fay-fotos',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
@@ -846,7 +1048,7 @@ function render(){
  if(tab!=='vender')camOff();
  if(tab!=='productos')PF=null;
  $('#app').innerHTML=views[tab]();
- if(tab==='productos')fillAttr();if(tab==='etiquetas')drawL();if(tab==='resumen')charts();sync()}
+ if(tab==='productos')fillAttr();if(tab==='etiquetas')drawL();if(tab==='resumen')charts();if(tab==='ruleta'){drawWheel();updProb();rinfo()}sync()}
 document.addEventListener('click',async e=>{
  const b=e.target.closest('button');if(!b)return;
  const d=b.dataset;
@@ -858,9 +1060,10 @@ document.addEventListener('click',async e=>{
  else if(d.foto){fotoView(d.foto)}
  else if(d.edit){const[c,id]=d.edit.split(':');editRec(c,id)}
  else if(d.del){const[c,id]=d.del.split(':');
-  if(!await ask('¿Eliminar este registro?'))return;
+  if(!await ask(c==='clientas'?'¿Eliminar a esta clienta? Sus compras se conservan en Ingresos, pero se borran su bolsita y sus premios.':'¿Eliminar este registro?'))return;
   if(c==='ingresos'){const i=S.ingresos.find(x=>x.id===id),p=i&&S.productos.find(x=>x.id===i.prod);if(p){p.stock+=i.cant||0;touch(p)}}
   if(c==='productos'){delete FOT[id];fdel(id)}
+  if(c==='clientas'){S.ingresos.forEach(i=>{if(i.cli===id){i.cli='';touch(i)}});S.premios=PRZ().filter(p=>{if(p.cli===id){tomb(p.id);return false}return true})}
   S[c]=S[c].filter(x=>x.id!==id);tomb(id);save();render()}
  else if(d.ab){const v=+$('#ab'+d.ab).value,x=S.deudas.find(z=>z.id===d.ab);
   if(v>0&&x){x.pagado=Math.min(x.monto,x.pagado+v);save();render()}}
@@ -905,7 +1108,9 @@ document.addEventListener('submit',async e=>{
   if(cn===null)return toast('Escribe el concepto nuevo o elige uno.');
   if(p){if(p.stock<q)return toast('Stock insuficiente ('+p.stock+' disponibles).');p.stock-=q;touch(p)}
   const mo=+f.monto;let dsc=Math.max(0,+f.desc||0);if(f.dt==='%')dsc=p?+(p.precio*q*Math.min(dsc,100)/100).toFixed(2):0;if(p&&dsc===0&&mo<p.precio*q-.005)dsc=+(p.precio*q-mo).toFixed(2);
-  S.ingresos.push({id:uid(),fecha:f.fecha,concepto:cn,cat:p?p.cat:(f.cat||''),prod:f.prod||'',cant:p?q:0,monto:mo,lista:+(mo+dsc).toFixed(2),desc:dsc,costo:p?+(p.costo*q).toFixed(2):0,ts:Date.now()});toast(dsc>0?'Ingreso registrado (con descuento de '+fmt(dsc)+')':'Ingreso registrado')}
+  S.ingresos.push({id:uid(),fecha:f.fecha,concepto:cn,cat:p?p.cat:(f.cat||''),cli:f.cli||'',prod:f.prod||'',cant:p?q:0,monto:mo,lista:+(mo+dsc).toFixed(2),desc:dsc,costo:p?+(p.costo*q).toFixed(2):0,ts:Date.now()});toast(dsc>0?'Ingreso registrado (con descuento de '+fmt(dsc)+')':'Ingreso registrado')}
+ else if(k==='cli'){const n=f.nombre.trim();if(!n)return toast('Escribe el nombre.');CLI().push({id:uid(),nombre:n,tel:(f.tel||'').trim(),nota:(f.nota||'').trim(),extra:0,fecha:today(),ts:Date.now()});toast('Clienta guardada 👛')}
+ else if(k==='rp'){const t=f.txt.trim();if(!t)return toast('Escribe qué dice el premio.');RUL().premios.push({id:uid(),txt:t,tipo:f.tipo,valor:Math.max(0,+f.valor||0),peso:Math.max(.1,+f.peso||1)});touchR();toast('Premio agregado a la ruleta')}
  else if(k==='ret'){const mo=+f.monto,disp=gsum(S.ingresos).g-sum(RT(),'monto');
   if(mo>disp+.005&&!await ask('Vas a retirar '+fmt(mo)+' pero solo hay '+fmt(disp)+' de ganancia real disponible. ¿Registrar igual?'))return;
   RT().push({id:uid(),fecha:f.fecha,tipo:f.tipo,monto:mo,nota:(f.nota||'').trim(),ts:Date.now()});toast('Retiro registrado')}
